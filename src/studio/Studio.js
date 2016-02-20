@@ -10,7 +10,13 @@ export const moveComponent = (component, position) => u({
 })
 
 export const selectComponent = (component) => u({
-  selectedComponentId: component._id
+  selectedComponentId: id => id === component._id ? null : component._id
+})
+
+export const toApp = (message) => u({ app: app => message(App)(app) })
+
+export const unselectComponent = () => u({
+  selectedComponentId: null
 })
 
 export const getSelectedComponent = () => (state) => (

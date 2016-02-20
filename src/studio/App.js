@@ -23,6 +23,16 @@ export const moveComponent = (component, position) => state => {
   }
 }
 
+const updateComponentById = (id, update) => u({
+  ui: u.map({
+    components: u.map(u.if(({ _id }) => _id === id, update))
+  })
+})
+
+export const renameComponent = (component, name) => updateComponentById(component._id, {
+  name: name
+})
+
 export const getComponentById = (id) => state => {
   for (const group of state.ui) for (const component of group.components) {
     if (component._id === id) return component

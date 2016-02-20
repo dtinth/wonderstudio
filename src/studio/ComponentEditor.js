@@ -17,7 +17,8 @@ const FieldGroup = (props) => <div
 
 export default React.createClass({
   propTypes: {
-    component: React.PropTypes.object
+    component: React.PropTypes.object,
+    dispatchToApp: React.PropTypes.func
   },
   render () {
     const component = this.props.component
@@ -26,7 +27,15 @@ export default React.createClass({
 
       <SectionTitle>Name</SectionTitle>
       <FieldGroup>
-        <input className={styles.input} placeholder='Control name' value={component.name} />
+        <input
+          className={styles.input}
+          placeholder='Control name'
+          value={component.name}
+          onChange={e => {
+            const name = e.target.value
+            this.props.dispatchToApp(app => app.renameComponent(component, name))
+          }}
+        />
       </FieldGroup>
 
       <SectionTitle>Properties</SectionTitle>

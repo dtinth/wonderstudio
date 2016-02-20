@@ -20,6 +20,18 @@ describe('moveComponent(component, dropTarget)', function () {
   })
 })
 
+describe('renameComponent(component, newName)', function () {
+  const A = { _id: 'A' }
+  const B = { _id: 'B' }
+  const B2 = { _id: 'B', name: 'wow' }
+
+  it('should move component to the correct position', function () {
+    const state = stateForComponents([ [ A ], [ B ] ])
+    const nextState = App.renameComponent(B, 'wow')(state)
+    assert.deepEqual(nextState, stateForComponents([ [ A ], [ B2 ] ]))
+  })
+})
+
 describe('getComponentById', function () {
   const A = { _id: 'A' }
   const B = { _id: 'B' }

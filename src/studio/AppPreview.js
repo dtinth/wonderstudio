@@ -7,6 +7,7 @@ import { DragSource, DropTarget } from 'react-dnd'
 import { compose, pure, withState } from 'recompose'
 import classNames from 'classnames'
 import ComponentEditor from './ComponentEditor'
+import DocumentClickListener from './DocumentClickListener'
 
 const DraggableWidget = compose(
   DragSource('widget',
@@ -103,12 +104,18 @@ const AppPreview = compose(
       this._dropHint.style.top = top + 'px'
     }
   },
+  onUnselect () {
+    this.props.dispatch(studio => studio.unselectComponent())
+  },
+  dispatchToApp (message) {
+    this.props.dispatch(studio => studio.toApp(message))
+  },
   onDragEnd (monitor) {
     const sourceComponent = monitor.getItem().component
     const targetPosition = this.props.dropTarget
     this.props.onSetDropTarget(null)
     if (typeof targetPosition === 'number') {
-      this.props.dispatch(app => app.moveComponent(sourceComponent, targetPosition))
+      this.props.dispatch(studio => studio.moveComponent(sourceComponent, targetPosition))
     }
   },
   renderWidget (component, index) {
@@ -117,7 +124,10 @@ const AppPreview = compose(
       key={index}
       onSetDropTarget={this.props.onSetDropTarget}
       onDragEnd={this.onDragEnd}
-      onClick={() => this.props.dispatch(app => app.selectComponent(component))}
+      onClick={e => (
+        e.stopPropagation(),
+        this.props.dispatch(studio => studio.selectComponent(component))
+      )}
     />
   },
   renderGroup (group, index) {
@@ -134,10 +144,13 @@ const AppPreview = compose(
     </div>
   },
   renderComponentEditor () {
-    const selectedComponent = this.props.query(app => app.getSelectedComponent())
+    const selectedComponent = this.props.query(studio => studio.getSelectedComponent())
     if (!selectedComponent) return null
-    return <div className={styles.componentEditor}>
-      <ComponentEditor component={selectedComponent} />
+    return <div>
+      <DocumentClickListener onClick={this.onUnselect} />
+      <div className={styles.componentEditor} onClick={e => e.stopPropagation()}>
+        <ComponentEditor component={selectedComponent} dispatchToApp={this.dispatchToApp} />
+      </div>
     </div>
   },
   render () {
