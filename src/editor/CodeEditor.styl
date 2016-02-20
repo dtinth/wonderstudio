@@ -1,0 +1,57 @@
+
+@require './material-colors.styl'
+
+fill()
+  position absolute
+  top 0
+  right 0
+  bottom 0
+  left 0
+
+.root
+  fill()
+
+codemirror-theme()
+  .cm-header
+    color $indigo500
+  .cm-quote
+    color $green500
+  .cm-negative
+    color $red500
+  .cm-positive
+    color $green500
+
+  .cm-keyword
+    color $purple500
+  .cm-atom
+    color $indigo500
+  .cm-number
+    color $cyan700
+  .cm-def
+    color $blueA700
+
+  .cm-variable-2
+    color $blue700
+  .cm-variable-3
+    color $teal600
+  .cm-comment
+    color $grey600
+  .cm-string
+    color $brown500
+  .cm-string-2
+    color $brown500
+  .cm-error
+  .cm-invalidchar
+    color $red500
+
+
+.editor
+  :global
+    .CodeMirror
+      fill()
+      height auto
+      font-family Roboto Mono, Menlo, Consolas, monospace
+      .CodeMirror-gutters
+        border-color darken(#F5F4F3, 10%)
+        background lighten(#F5F4F3, 40%)
+      codemirror-theme()
