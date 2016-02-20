@@ -1,0 +1,16 @@
+
+:global
+  #app-loading
+    position absolute
+    top 50%
+    left 50%
+    transform translate(-50%, -50%)
+    text-align center
+    > .appname
+      color rgba(black, 50%)
+      > em
+        font-style normal
+    > .appdesc
+      color rgba(black, 33%)
+  .is-loaded #app-loading
+    display none
