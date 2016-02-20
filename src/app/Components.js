@@ -42,6 +42,7 @@ const createPropertyDescriptionBuilder = name => {
 export function AppBar (props) {
   return <MaterialAppBar
     title={props.title}
+    style={{ marginBottom: 8 }}
     iconElementLeft={<span />}
   />
 }
@@ -92,7 +93,7 @@ Button.metadata = {
 // =============================================================================
 
 export function Label (props) {
-  return <div style={{ margin: '16px 16px', whiteSpace: 'pre-wrap', ...(props.style || { }) }}>
+  return <div style={{ margin: '8px 16px', whiteSpace: 'pre-wrap', ...(props.style || { }) }}>
     {props.text}
   </div>
 }
