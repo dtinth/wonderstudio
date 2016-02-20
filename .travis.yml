@@ -1,25 +1,20 @@
 sudo: false
-
 language: node_js
 node_js:
-  - 5.6
-
+- 5.6
 cache:
   directories:
-    - node_modules
-
+  - node_modules
 before_install:
-  - npm install codecov.io coveralls
-
+- npm install codecov.io coveralls
 after_success:
-  - cat ./coverage/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js
-  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-
+- cat ./coverage/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js
+- cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 branches:
   only:
-    - master
-
+  - master
 deploy:
   provider: firebase
   skip_cleanup: true
-
+  token:
+    secure: yfaAGZgsveiTKzmjx14aWpLMsGXnWuz6qihdhApVJzj+hTMPTeth72kxFUX9StqcFp5JCzvMsgR+j3wzpZfJXMFzxXk066+/05fERdUTETWbq8laz3ddd2b565U8cvlEZgeweIuoQsu2Xgs22+H4rD0hu9ZiuuTZmJ9+pt5PWCRxBVVP/edG4wHaRqsCbpnPsQac933uJ/IbWhULOG589ac42UAr+Nw8te8wbfkvCe2TfBAVEqPVmuZg+H4g69QghO3grV29N+as2cCyPr+6wzsMKWAvtCp4xoqJa0LhNRISxU4mmhOsOKVbDEsSjRL+R0gJNdemmeEqCRi2Y9ZutnWf/S0j49RjpWMSXYXCwkZCv5/AmQXH3VXN5QEo49EgAIixQgqnyIYOZMSDA/Zyq7f0DIb3zcg+b54Ww9+suF0OPh/vFEi8YwICxKmCAzedbaMYiA35SI5oHmhV3JaymItL1CtIkjUeB1Fx5jwPO+gXnCmviEhTS9hjFvnuwY4Ux2l9HJ4ztpUauzMdpl+hKzCubdkR5dzHzqODs5Jul058VUagYqyykRZA75f1/+h2IsjMmN2pjF+WlyknHeSA41I1iUgR/USIk7bLMA0IvAqRzG4Up5AQK0Q0YDaUD3fzmRwWqx05Yi1yo3WMlcBzFFHh5/Ybz8qwLgQdPDFQTfg=
