@@ -7,7 +7,13 @@ module.exports = {
         modules: true,
         localIdentName: '[name]の[local]／[hash:base64:7]'
       }
-    }
+    },
+    extra: [
+      {
+        test: /\.yml$/,
+        loaders: [ 'json-loader', 'yaml-loader' ]
+      }
+    ]
   },
   karma: {
     tests: 'tests/index.js',

@@ -1,4 +1,9 @@
 
+$title-bar-height = 2rem
+$app-width = 360px
+$name-width = 120px
+$left-width = $app-width + $name-width
+
 .root
   background #F0EFEE
   position absolute
@@ -11,8 +16,8 @@
   background #3580DA
   color white
   padding 0 0.7rem
-  height 2rem
-  line-height 2rem
+  height $title-bar-height
+  line-height $title-bar-height
 
 .appTitle
   > em
@@ -20,3 +25,25 @@
     opacity 0.8
   > span
     opacity 0.5
+
+.middle
+  position absolute
+  top $title-bar-height
+  right 0
+  bottom 0
+  left 0
+
+.left
+  position absolute
+  top 0
+  width $left-width
+  bottom 0
+  left 0
+
+.right
+  position absolute
+  background white
+  top 0
+  right 0
+  bottom 0
+  left $left-width

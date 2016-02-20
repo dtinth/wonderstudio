@@ -1,5 +1,7 @@
 import React from 'react'
 import styles from './StudioApp.styl'
+import AppPreview from './AppPreview'
+import testApp from '../example-apps/adder.yml'
 
 export default React.createClass({
   render () {
@@ -9,7 +11,13 @@ export default React.createClass({
           <em>wonderful.software</em><span>/</span><strong>studio</strong>
         </div>
       </div>
-      <h2>Welcome to React WOW COOL GR8 job</h2>
+      <div className={styles.middle}>
+        <div className={styles.left}>
+          <AppPreview app={testApp} />
+        </div>
+        <div className={styles.right}>
+        </div>
+      </div>
     </div>
   }
 })
