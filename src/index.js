@@ -8,6 +8,7 @@ import './loading.styl'
 import styles from './index.styl'
 import { loadCSS } from 'fg-loadcss'
 
+// Not sure why, but this fixes some weird bug where some modules cannot be loaded!
 require.include('./app/Components')
 
 document.body.className = styles.body
