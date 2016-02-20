@@ -60,6 +60,6 @@ code: |
   button.onclick = () => {
     const a = +textBox1.value
     const b = +textBox2.value
-    const result = `${a} + ${b} = ${a + b}`
+    const result = a + ' + ' + b + ' = ' + (a + b)
     resultLabel.text = result
   }

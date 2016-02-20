@@ -16,8 +16,8 @@ const DraggableWidget = compose(
           setDropTarget: props.onSetDropTarget
         }
       },
-      endDrag (props) {
-        props.onDragEnd()
+      endDrag (props, monitor) {
+        props.onDragEnd(monitor)
       }
     },
     (connect, monitor) => ({
@@ -33,6 +33,7 @@ const DraggableWidget = compose(
       <div className={styles.widget}>
         <Widget component={component} />
       </div>
+      <div className={styles.widgetOverlay}></div>
     </div>
   )
 })
@@ -88,7 +89,8 @@ const AppPreview = compose(
     app: React.PropTypes.object,
     connectDropTarget: React.PropTypes.func,
     dropTarget: React.PropTypes.any,
-    onSetDropTarget: React.PropTypes.func
+    onSetDropTarget: React.PropTypes.func,
+    onDispatch: React.PropTypes.func
   },
   getInitialState () {
     return { }
@@ -99,8 +101,13 @@ const AppPreview = compose(
       this._dropHint.style.top = top + 'px'
     }
   },
-  onDragEnd () {
+  onDragEnd (monitor) {
+    const sourceComponent = monitor.getItem().component
+    const targetPosition = this.props.dropTarget
     this.props.onSetDropTarget(null)
+    if (typeof targetPosition === 'number') {
+      this.props.onDispatch(studio => studio.moveComponent(sourceComponent, targetPosition))
+    }
   },
   renderWidget (component, index) {
     return <DraggableWidget

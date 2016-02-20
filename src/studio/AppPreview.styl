@@ -62,15 +62,27 @@
       background darken(#F0EFEE, 20%)
       border-color darken(#F0EFEE, 30%)
 
+$drag-hint-color = darken(#F0EFEE, 50%)
+
 .draggableWidget
   cursor move
+  position relative
   > .widget
     pointer-events none
+  > .widgetOverlay
+    position absolute
+    top 0
+    right 0px
+    bottom 0
+    left 0px
+  &:hover > .widgetOverlay
+    box-shadow inset 0 0 3px rgba($drag-hint-color, 0.7), 0 0 3px rgba($drag-hint-color, 0.7)
+    z-index 9999999
   &.isDragging
     opacity 0.25
 
 .dropHint
-  background #3949ab
+  background $drag-hint-color
   position absolute
   display none
   box-sizing border-box
