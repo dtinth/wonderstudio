@@ -4,6 +4,7 @@ import styles from './styles.styl'
 import RaisedButton from 'material-ui/lib/raised-button'
 import MaterialTextField from 'material-ui/lib/text-field'
 import MaterialAppBar from 'material-ui/lib/app-bar'
+import u from 'updeep'
 
 const INPUT_PADDING = 16
 
@@ -33,6 +34,18 @@ export function Button (props) {
       style={{ width: '100%' }}
     />
   </div>
+}
+
+const property = (name, coerce = x => x) => ({
+  get: props => props[name],
+  set: value => u({ [name]: () => coerce(value) })
+})
+
+Button.metadata = {
+  properties: {
+    label: property('label', String),
+    onclick: property('onclick')
+  }
 }
 
 export function Label (props) {

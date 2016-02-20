@@ -1,21 +1,15 @@
 
 import { createStore } from 'redux'
 import u from 'updeep'
+import * as Components from './Components'
 
 const INITIAL_STATE = {
   ui: [ ],
   components: { }
 }
 
-const controls = {
-  Button: {
-    setLabel: value => u({ label: () => value }),
-    setOnclick: value => u({ onclick: () => value })
-  }
-}
-
-const app = {
-  createControl: (id, type, props) => u({
+const appDomain = {
+  createComponent: (id, type, props) => u({
     components: {
       [id]: () => ({ type, props })
     }
@@ -23,63 +17,63 @@ const app = {
   appendGroup: (ids) => u({
     ui: (state) => [ ...state, { components: ids } ]
   }),
-  dispatchToComponent: (id, message) => u({
+  setComponentProperty: (id, name, value) => u({
     components: {
-      [id]: control => u({
-        props: props => message(controls[control.type])(props)
-      })(control)
+      [id]: component => u({
+        props: props => Components[component.type].metadata.properties[name].set(value)(props)
+      })(component)
     }
-  })
-}
-
-const UI = {
-  Button: (id, dispatch, getState) => {
-    return {
-      _id: id,
-      get label () {
-        return getState().props.label
-      },
-      set label (value) {
-        return dispatch(button => button.setLabel(value))
-      },
-      get onclick () {
-        return getState().props.onclick
-      },
-      set onclick (value) {
-        return dispatch(button => button.setOnclick(value))
-      }
-    }
+  }),
+  getComponentProperty: (id, name) => state => {
+    const component = state.components[id]
+    return Components[component.type].metadata.properties[name].get(component.props)
   }
 }
 
-function createRuntime (dispatch, getState) {
+function createRuntime (dispatch, query) {
   let _nextId = 1
   const nextId = () => _nextId++
-  return {
-    createButton (props) {
-      const id = nextId()
-      dispatch(app => app.createControl(id, 'Button', props))
-      const childDispatch = message => dispatch(app => app.dispatchToComponent(id, message))
-      const getChildState = () => getState().components[id]
-      return new UI.Button(id, childDispatch, getChildState)
-    },
+  const runtime = {
     appendGroup (controls) {
       dispatch(app => app.appendGroup(controls.map(control => control._id)))
+    }
+  }
+  for (const componentName of Object.keys(Components)) {
+    const Component = Components[componentName]
+    if (Component.metadata) {
+      runtime[`create${componentName}`] = createRemote(componentName)
+    }
+  }
+  return runtime
+  function createRemote (componentName) {
+    return function (props) {
+      const id = nextId()
+      dispatch(app => app.createComponent(id, componentName, props))
+      const remote = { _id: id }
+      const properties = Components[componentName].metadata.properties
+      for (const property of Object.keys(properties)) {
+        Object.defineProperty(remote, property, {
+          enumerable: true,
+          get: () => query(app => app.getComponentProperty(id, property)),
+          set: value => dispatch(app => app.setComponentProperty(id, property, value))
+        })
+      }
+      return remote
     }
   }
 }
 
 function reducer (state = INITIAL_STATE, action) {
   return (typeof action.message === 'function'
-    ? action.message(app)(state)
+    ? action.message(appDomain)(state)
     : state
   )
 }
 
 export function createStoreForCode (code) {
   const store = createStore(reducer)
-  const getState = () => store.getState()
+  const query = getSelector => getSelector(appDomain)(store.getState())
   const dispatch = message => store.dispatch({ type: 'MESSAGE', message })
-  code(createRuntime(dispatch, getState))
+  code(createRuntime(dispatch, query))
   return store
 }

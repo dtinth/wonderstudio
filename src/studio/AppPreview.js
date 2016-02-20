@@ -7,12 +7,12 @@ export default React.createClass({
   propTypes: {
     app: React.PropTypes.object
   },
-  renderWidget (component) {
-    return <Widget component={component} />
+  renderWidget (component, index) {
+    return <Widget component={component} key={index} />
   },
-  renderGroup (group) {
+  renderGroup (group, index) {
     const componentNames = group.components.map(component => component.name).join(', ')
-    return <div className={styles.group}>
+    return <div className={styles.group} key={index}>
       <div className={styles.groupLabel}>
         {componentNames}
       </div>
