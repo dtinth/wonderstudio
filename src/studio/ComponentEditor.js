@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './ComponentEditor.styl'
 import classNames from 'classnames'
+import * as Components from '../app/Components'
 
 const SectionTitle = (props) => <div className={styles.sectionTitle}>
   {props.children}
@@ -19,6 +20,16 @@ export default React.createClass({
   propTypes: {
     component: React.PropTypes.object,
     dispatchToApp: React.PropTypes.func
+  },
+  renderProperties () {
+    const component = this.props.component
+    const propertyDescriptors = Components[component.type].metadata.properties
+    return Object.keys(propertyDescriptors).map(propertyName => {
+      // const descriptor = propertyDescriptors[propertyName]
+      return <FieldGroup title={propertyName}>
+        <input className={styles.input} placeholder='Text to display' value={component.props[propertyName]} />
+      </FieldGroup>
+    })
   },
   render () {
     const component = this.props.component
@@ -39,9 +50,7 @@ export default React.createClass({
       </FieldGroup>
 
       <SectionTitle>Properties</SectionTitle>
-      <FieldGroup title='label'>
-        <input className={styles.input} placeholder='Text to display' />
-      </FieldGroup>
+      {this.renderProperties()}
     </div>
   }
 })

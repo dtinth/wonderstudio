@@ -5,8 +5,35 @@ import RaisedButton from 'material-ui/lib/raised-button'
 import MaterialTextField from 'material-ui/lib/text-field'
 import MaterialAppBar from 'material-ui/lib/app-bar'
 import u from 'updeep'
+import { mapValues } from 'lodash'
 
 const INPUT_PADDING = 16
+
+const propertySet = object => {
+  const result = mapValues(object,
+    (f, name) => f(createPropertyDescriptionBuilder(name)).build()
+  )
+  console.log(result)
+  return result
+}
+
+const createPropertyDescriptionBuilder = name => {
+  const createBuilder = descriptor => {
+    const update = spec => createBuilder(u(spec)(descriptor))
+    return {
+      build: () => descriptor,
+      coerce: mapper => update({
+        set: setter => value => setter(mapper(value))
+      })
+    }
+  }
+  return createBuilder({
+    get: props => props[name],
+    set: value => u({ [name]: () => value })
+  })
+}
+
+// =============================================================================
 
 export function AppBar (props) {
   return <MaterialAppBar
@@ -14,18 +41,34 @@ export function AppBar (props) {
     iconElementLeft={<span />}
   />
 }
+AppBar.metadata = {
+  properties: propertySet({
+    title: prop => prop.coerce(String)
+  })
+}
+
+// =============================================================================
 
 export function TextField (props) {
   return <MaterialTextField
     style={{ width: '100%' }}
     hintText={props.hintText}
     hintStyle={{ paddingLeft: INPUT_PADDING }}
+    floatingLabelText={props.floatingLabelText}
     floatingLabelStyle={{ paddingLeft: INPUT_PADDING }}
     inputStyle={{ paddingLeft: INPUT_PADDING }}
-    defaultValue={props.value}
-    floatingLabelText={props.floatingLabelText}
+    value={props.value}
   />
 }
+TextField.metadata = {
+  properties: propertySet({
+    hintText: prop => prop.coerce(String),
+    floatingLabelText: prop => prop.coerce(String),
+    value: prop => prop.coerce(String)
+  })
+}
+
+// =============================================================================
 
 export function Button (props) {
   return <div style={{ margin: '8px 16px' }}>
@@ -35,27 +78,35 @@ export function Button (props) {
     />
   </div>
 }
-
-const property = (name, coerce = x => x) => ({
-  get: props => props[name],
-  set: value => u({ [name]: () => coerce(value) })
-})
-
 Button.metadata = {
-  properties: {
-    label: property('label', String),
-    onclick: property('onclick')
-  }
+  properties: propertySet({
+    label: prop => prop.coerce(String),
+    onclick: prop => prop
+  })
 }
+
+// =============================================================================
 
 export function Label (props) {
   return <div style={{ margin: '16px 16px', whiteSpace: 'pre-wrap', ...(props.style || { }) }}>
     {props.text}
   </div>
 }
+Label.metadata = {
+  properties: propertySet({
+    text: prop => prop.coerce(String)
+  })
+}
+
+// =============================================================================
 
 export function SectionHeader (props) {
   return <div className={styles.sectionHeader} style={props.style}>
     {props.title}
   </div>
+}
+SectionHeader.metadata = {
+  properties: propertySet({
+    title: prop => prop.coerce(String)
+  })
 }
