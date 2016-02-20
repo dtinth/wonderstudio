@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "Describe wonderstudio here",
   "private": true,
+  "standard": {
+    "globals": [
+      "describe", "it", "beforeEach", "before", "xit", "xdescribe", "assert"
+    ]
+  },
   "scripts": {
     "build": "nwb build",
     "clean": "nwb clean",
@@ -10,11 +15,18 @@
     "test": "nwb test"
   },
   "dependencies": {
+    "fg-loadcss": "^1.0.0-0",
+    "normalize.css": "^3.0.3",
     "react": "0.14.x",
     "react-dom": "0.14.x"
   },
   "devDependencies": {
-    "nwb": "0.7.x"
+    "babel-plugin-espower": "^1.1.0",
+    "karma-growl-reporter": "^0.1.1",
+    "nwb": "0.7.x",
+    "nwb-stylus": "^0.5.0",
+    "power-assert": "^1.2.0",
+    "standard": "^6.0.7"
   },
   "author": "",
   "license": "MIT",
