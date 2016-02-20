@@ -6,6 +6,7 @@ import WidgetGroup from '../app/WidgetGroup'
 import { DragSource, DropTarget } from 'react-dnd'
 import { compose, pure, withState } from 'recompose'
 import classNames from 'classnames'
+import ComponentEditor from './ComponentEditor'
 
 const DraggableWidget = compose(
   DragSource('widget',
@@ -90,7 +91,8 @@ const AppPreview = compose(
     connectDropTarget: React.PropTypes.func,
     dropTarget: React.PropTypes.any,
     onSetDropTarget: React.PropTypes.func,
-    onDispatch: React.PropTypes.func
+    dispatch: React.PropTypes.func,
+    query: React.PropTypes.func
   },
   getInitialState () {
     return { }
@@ -106,7 +108,7 @@ const AppPreview = compose(
     const targetPosition = this.props.dropTarget
     this.props.onSetDropTarget(null)
     if (typeof targetPosition === 'number') {
-      this.props.onDispatch(studio => studio.moveComponent(sourceComponent, targetPosition))
+      this.props.dispatch(studio => studio.moveComponent(sourceComponent, targetPosition))
     }
   },
   renderWidget (component, index) {
@@ -130,9 +132,14 @@ const AppPreview = compose(
       </div>
     </div>
   },
+  renderComponentEditor () {
+    return <div className={styles.componentEditor}>
+      <ComponentEditor />
+    </div>
+  },
   render () {
-    return this.props.connectDropTarget(
-      <div className={styles.root}>
+    return this.props.connectDropTarget(<div>
+      <div className={styles.container}>
         <div className={styles.content} ref={el => this._contentWrapper = el}>
           <div className={styles.backdrop}></div>
           {this.props.app.ui.map(this.renderGroup)}
@@ -151,7 +158,8 @@ const AppPreview = compose(
           ></div>
         </div>
       </div>
-    )
+      {this.renderComponentEditor()}
+    </div>)
   }
 }))
 
