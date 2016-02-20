@@ -1,7 +1,6 @@
 import React from 'react'
 import styles from './StudioApp.styl'
 import AppPreview from './AppPreview'
-import testApp from '../example-apps/welcome.yml'
 import CodeEditorContainer from './CodeEditorContainer'
 
 import HTML5Backend from 'react-dnd-html5-backend'
@@ -11,14 +10,17 @@ import * as Studio from './Studio'
 
 export default compose(
   DragDropContext(HTML5Backend),
-  withState('app', 'onUpdateApp', testApp)
+  withState('state', 'onUpdateState', Studio.getInitialState())
 )(React.createClass({
   propTypes: {
-    app: React.PropTypes.object,
-    onUpdateApp: React.PropTypes.func
+    state: React.PropTypes.object,
+    onUpdateState: React.PropTypes.func
   },
   onDispatch (message) {
-    this.props.onUpdateApp(message(Studio))
+    this.props.onUpdateState(message(Studio))
+  },
+  query (message) {
+    return message(Studio)(this.props.state)
   },
   render () {
     return <div className={styles.root}>
@@ -29,10 +31,10 @@ export default compose(
       </div>
       <div className={styles.middle}>
         <div className={styles.left}>
-          <AppPreview app={this.props.app} onDispatch={this.onDispatch} />
+          <AppPreview state={this.props.state} dispatch={this.onDispatch} query={this.query} />
         </div>
         <div className={styles.right}>
-          <CodeEditorContainer code={testApp.code} />
+          <CodeEditorContainer code={this.props.state.app.code} />
         </div>
       </div>
     </div>

@@ -16,13 +16,17 @@ const FieldGroup = (props) => <div
 </div>
 
 export default React.createClass({
+  propTypes: {
+    component: React.PropTypes.object
+  },
   render () {
+    const component = this.props.component
     return <div className={styles.root}>
-      <div className={styles.type}>AppBar</div>
+      <div className={styles.type}>{component.type}</div>
 
       <SectionTitle>Name</SectionTitle>
       <FieldGroup>
-        <input className={styles.input} placeholder='Control name' />
+        <input className={styles.input} placeholder='Control name' value={component.name} />
       </FieldGroup>
 
       <SectionTitle>Properties</SectionTitle>

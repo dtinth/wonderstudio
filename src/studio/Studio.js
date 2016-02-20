@@ -1,24 +1,18 @@
 
-import { findIndex, includes, without } from 'lodash'
+import * as App from './App'
 import u from 'updeep'
+import testApp from '../example-apps/welcome.yml'
 
-export const moveComponent = (component, position) => state => {
-  const groups = state.ui
-  const groupContainsComponent = group => includes(group.components, component)
-  const originalGroupIndex = findIndex(groups, groupContainsComponent)
-  if (originalGroupIndex === -1) return state
-  const originalGroup = groups[originalGroupIndex]
-  if (originalGroup.components.length !== 1) {
-    return state // unsupported yet
-  }
-  if (typeof position === 'number') {
-    const newGroups = [
-      ...without(groups.slice(0, position), originalGroup),
-      originalGroup,
-      ...without(groups.slice(position), originalGroup)
-    ]
-    return u({ ui: () => newGroups })(state)
-  } else {
-    return state
-  }
-}
+export const getInitialState = () => ({ app: testApp })
+
+export const moveComponent = (component, position) => u({
+  app: App.moveComponent(component, position)
+})
+
+export const selectComponent = (component) => u({
+  selectedComponentId: component._id
+})
+
+export const getSelectedComponent = () => (state) => (
+  App.getComponentById(state.selectedComponentId)(state.app)
+)

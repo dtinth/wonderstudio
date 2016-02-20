@@ -27,10 +27,10 @@ const DraggableWidget = compose(
     })
   ),
   pure
-)(({ component, connectDragSource, isDragging }) => {
+)(({ component, connectDragSource, isDragging, onClick }) => {
   const className = classNames(styles.draggableWidget, isDragging && styles.isDragging)
   return connectDragSource(
-    <div className={className}>
+    <div className={className} onClick={onClick}>
       <div className={styles.widget}>
         <Widget component={component} />
       </div>
@@ -87,7 +87,7 @@ const AppPreview = compose(
   pure
 )(React.createClass({
   propTypes: {
-    app: React.PropTypes.object,
+    state: React.PropTypes.object,
     connectDropTarget: React.PropTypes.func,
     dropTarget: React.PropTypes.any,
     onSetDropTarget: React.PropTypes.func,
@@ -108,7 +108,7 @@ const AppPreview = compose(
     const targetPosition = this.props.dropTarget
     this.props.onSetDropTarget(null)
     if (typeof targetPosition === 'number') {
-      this.props.dispatch(studio => studio.moveComponent(sourceComponent, targetPosition))
+      this.props.dispatch(app => app.moveComponent(sourceComponent, targetPosition))
     }
   },
   renderWidget (component, index) {
@@ -117,6 +117,7 @@ const AppPreview = compose(
       key={index}
       onSetDropTarget={this.props.onSetDropTarget}
       onDragEnd={this.onDragEnd}
+      onClick={() => this.props.dispatch(app => app.selectComponent(component))}
     />
   },
   renderGroup (group, index) {
@@ -133,8 +134,10 @@ const AppPreview = compose(
     </div>
   },
   renderComponentEditor () {
+    const selectedComponent = this.props.query(app => app.getSelectedComponent())
+    if (!selectedComponent) return null
     return <div className={styles.componentEditor}>
-      <ComponentEditor />
+      <ComponentEditor component={selectedComponent} />
     </div>
   },
   render () {
@@ -142,7 +145,7 @@ const AppPreview = compose(
       <div className={styles.container}>
         <div className={styles.content} ref={el => this._contentWrapper = el}>
           <div className={styles.backdrop}></div>
-          {this.props.app.ui.map(this.renderGroup)}
+          {this.props.state.app.ui.map(this.renderGroup)}
           <div className={styles.group}>
             <div className={styles.groupContent}>
               <div className={styles.newControl}>
