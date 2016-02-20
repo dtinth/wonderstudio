@@ -18,7 +18,7 @@ ui:
       name: label2
       _id: 'c3'
       props:
-        text: This is where you can learn programming by building mobile apps and share share them with your friends!
+        text: This is where you can learn programming by building mobile apps and share them with your friends!
   - components:
     - type: Label
       name: label3
