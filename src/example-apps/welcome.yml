@@ -67,9 +67,11 @@ ui:
         style:
           textAlign: center
 code: |
+  // Enter your code here to make your application alive!
+
   button.onclick = () => {
-    const a = +textBox1.value
-    const b = +textBox2.value
+    const a = Number(textBox1.value)
+    const b = Number(textBox2.value)
     const result = a + ' + ' + b + ' = ' + (a + b)
     resultLabel.text = result
   }
