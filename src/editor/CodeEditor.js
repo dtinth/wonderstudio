@@ -17,6 +17,7 @@ export default React.createClass({
     })
     require.ensure([ ], () => {
       this._tern = require('./installTern')(cm)
+      // this._tern.server.addFile('runtime.js', 'function wow() { return 42 };')
     }, 'tern')
   },
   render () {
