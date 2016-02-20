@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './StudioApp.styl'
 import AppPreview from './AppPreview'
 import testApp from '../example-apps/welcome.yml'
-import CodeEditor from '../editor/CodeEditor'
+import CodeEditorContainer from './CodeEditorContainer'
 
 export default React.createClass({
   render () {
@@ -17,7 +17,7 @@ export default React.createClass({
           <AppPreview app={testApp} />
         </div>
         <div className={styles.right}>
-          <CodeEditor code={testApp.code} />
+          <CodeEditorContainer code={testApp.code} />
         </div>
       </div>
     </div>

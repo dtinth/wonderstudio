@@ -51,7 +51,19 @@ codemirror-theme()
       fill()
       height auto
       font-family Roboto Mono, Menlo, Consolas, monospace
+      font-size 0.9rem
+      line-height 1.3rem
       .CodeMirror-gutters
         border-color darken(#F5F4F3, 10%)
         background lighten(#F5F4F3, 40%)
       codemirror-theme()
+
+:global #wonderstudio
+  .CodeMirror-Tern-tooltip
+    font-family: Source Sans Pro, sans-serif
+    a
+      color $indigo500
+      text-decoration none
+    .CodeMirror-Tern-farg-current
+      text-decoration none
+      font-weight bold

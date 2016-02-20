@@ -1,20 +1,23 @@
 import React from 'react'
-import styles from './CodeEditor.styl'
-import 'codemirror/lib/codemirror.css'
 import CodeMirror from 'codemirror'
 import 'codemirror/mode/javascript/javascript'
+import 'codemirror/lib/codemirror.css'
+import styles from './CodeEditor.styl'
 
 export default React.createClass({
   propTypes: {
     code: React.PropTypes.string
   },
   componentDidMount () {
-    this._editor = new CodeMirror(this._editorContainer, {
+    const cm = this._cm = new CodeMirror(this._editorContainer, {
       value: this.props.code,
       mode: 'javascript',
       lineNumbers: true,
       viewportMargin: Infinity
     })
+    require.ensure([ ], () => {
+      this._tern = require('./installTern')(cm)
+    }, 'tern')
   },
   render () {
     return <div className={styles.root}>
