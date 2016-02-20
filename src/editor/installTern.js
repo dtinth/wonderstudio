@@ -23,6 +23,14 @@ module.exports = function (cm) {
     'Ctrl-Q': cm => tern.rename(cm),
     'Ctrl-.': cm => tern.selectName(cm)
   })
+  cm.showHint = (original => function (options) {
+    return original.call(this, { ...options, completeSingle: false })
+  })(cm.showHint)
   cm.on('cursorActivity', cm => tern.updateArgHints(cm))
+  cm.on('change', (instance, change) => {
+    if (change.text.length === 1 && change.text[0] === '.') {
+      tern.complete(cm)
+    }
+  })
   return tern
 }

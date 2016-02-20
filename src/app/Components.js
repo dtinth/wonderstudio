@@ -20,8 +20,15 @@ const propertySet = object => {
 const createPropertyDescriptionBuilder = name => {
   const createBuilder = descriptor => {
     const update = spec => createBuilder(u(spec)(descriptor))
-    return {
+    const builder = {
       build: () => descriptor,
+      doc: text => update({
+        doc: text
+      }),
+      type: type => update({
+        type: type
+      }),
+      string: () => builder.type('string').coerce(String),
       coerce: mapper => update({
         set: setter => value => setter(mapper(value))
       }),
@@ -29,6 +36,7 @@ const createPropertyDescriptionBuilder = name => {
         input: { type, ...options }
       })
     }
+    return builder
   }
   return createBuilder({
     get: props => props[name],
@@ -48,7 +56,7 @@ export function AppBar (props) {
 }
 AppBar.metadata = {
   properties: propertySet({
-    title: prop => prop.coerce(String).input('text')
+    title: prop => prop.string().doc('Application title').input('text')
   })
 }
 
@@ -67,9 +75,9 @@ export function TextField (props) {
 }
 TextField.metadata = {
   properties: propertySet({
-    hintText: prop => prop.coerce(String).input('text'),
-    floatingLabelText: prop => prop.coerce(String).input('text'),
-    value: prop => prop.coerce(String).input('text')
+    hintText: prop => prop.string().doc('The placeholder text that will be displayed when this field is empty').input('text'),
+    floatingLabelText: prop => prop.string().doc('The text to display above the field’s value').input('text'),
+    value: prop => prop.string().doc('The text inside this text field').input('text')
   })
 }
 
@@ -85,8 +93,8 @@ export function Button (props) {
 }
 Button.metadata = {
   properties: propertySet({
-    label: prop => prop.coerce(String).input('text'),
-    onclick: prop => prop
+    label: prop => prop.string().doc('The text to display on the button').input('text'),
+    onclick: prop => prop.type('fn()').doc('The function that will be invoked when the button is clicked')
   })
 }
 
@@ -99,7 +107,7 @@ export function Label (props) {
 }
 Label.metadata = {
   properties: propertySet({
-    text: prop => prop.coerce(String).input('textarea', { wide: true })
+    text: prop => prop.string().doc('The label’s text').input('textarea', { wide: true })
   })
 }
 
@@ -112,6 +120,6 @@ export function SectionHeader (props) {
 }
 SectionHeader.metadata = {
   properties: propertySet({
-    title: prop => prop.coerce(String).input('text')
+    title: prop => prop.string().doc('The section title text').input('text')
   })
 }
