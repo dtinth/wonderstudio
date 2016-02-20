@@ -46,8 +46,11 @@
     "nwb": "0.7.x",
     "nwb-stylus": "^0.5.0",
     "power-assert": "^1.2.0",
+    "raw-loader": "^0.5.1",
     "react-proxy-loader": "^0.3.4",
+    "script-loader": "^0.6.1",
     "standard": "^6.0.7",
+    "worker-loader": "^0.7.0",
     "yaml-loader": "^0.1.0"
   },
   "author": "",

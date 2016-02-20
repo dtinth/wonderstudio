@@ -27,3 +27,13 @@ module.exports = {
     plugins: [ require.resolve('babel-plugin-espower') ]
   }
 }
+
+// ヤバい！！！！
+require('nwb/lib/createWebpackConfig').default = (original => {
+  return function () {
+    const result = original.apply(this, arguments)
+    if (!result.module.noParse) result.module.noParse = [ ]
+    result.module.noParse.push(/standard-format/)
+    return result
+  }
+})(require('nwb/lib/createWebpackConfig').default)

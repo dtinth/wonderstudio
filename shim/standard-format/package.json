@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "uglifyify": "^3.0.1",
+    "uglifyjs": "^2.4.10"
+  },
+  "dependencies": {
+    "babylon": "6.1.21",
+    "standard-format": "^2.1.0"
+  },
+  "scripts": {
+    "build": "(echo 'self.'; (./node_modules/.bin/browserify -r esformatter-eol-last -r esformatter-eol-last -r esformatter-jsx -r esformatter-literal-notation -r esformatter-quotes -r esformatter-semicolon-first -r esformatter-spaced-lined-comment -r standard-format --ignore-missing -g uglifyify | uglifyjs)) > standard-format.browser.js"
+  }
+}
