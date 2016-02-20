@@ -34,6 +34,7 @@ require('nwb/lib/createWebpackConfig').default = (original => {
     const result = original.apply(this, arguments)
     if (!result.module.noParse) result.module.noParse = [ ]
     result.module.noParse.push(/standard-format/)
+    result.output.chunkFilename = '[name]-[chunkhash].js'
     return result
   }
 })(require('nwb/lib/createWebpackConfig').default)

@@ -21,6 +21,7 @@
     "test": "nwb test"
   },
   "dependencies": {
+    "babel-standalone": "^6.4.4",
     "classnames": "^2.2.3",
     "codemirror": "^5.12.0",
     "fg-loadcss": "^1.0.0-0",
