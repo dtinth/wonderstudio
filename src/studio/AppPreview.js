@@ -24,12 +24,15 @@ const DraggableWidget = compose(
     },
     (connect, monitor) => ({
       connectDragSource: connect.dragSource(),
-      isDragging: monitor.isDragging()
+      dragging: monitor.isDragging()
     })
   ),
   pure
-)(({ component, connectDragSource, isDragging, onClick }) => {
-  const className = classNames(styles.draggableWidget, isDragging && styles.isDragging)
+)(({ component, connectDragSource, dragging, onClick, selected }) => {
+  const className = classNames(styles.draggableWidget, {
+    [styles.isDragging]: dragging,
+    [styles.isSelected]: selected
+  })
   return connectDragSource(
     <div className={className} onClick={onClick}>
       <div className={styles.widget}>
@@ -110,6 +113,9 @@ const AppPreview = compose(
   dispatchToApp (message) {
     this.props.dispatch(studio => studio.toApp(message))
   },
+  getSelectedComponent () {
+    return this.props.query(studio => studio.getSelectedComponent())
+  },
   onDragEnd (monitor) {
     const sourceComponent = monitor.getItem().component
     const targetPosition = this.props.dropTarget
@@ -121,6 +127,7 @@ const AppPreview = compose(
   renderWidget (component, index) {
     return <DraggableWidget
       component={component}
+      selected={component === this.getSelectedComponent()}
       key={index}
       onSetDropTarget={this.props.onSetDropTarget}
       onDragEnd={this.onDragEnd}
@@ -144,7 +151,7 @@ const AppPreview = compose(
     </div>
   },
   renderComponentEditor () {
-    const selectedComponent = this.props.query(studio => studio.getSelectedComponent())
+    const selectedComponent = this.getSelectedComponent()
     if (!selectedComponent) return null
     return <div>
       <DocumentClickListener onClick={this.onUnselect} />
