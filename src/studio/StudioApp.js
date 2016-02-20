@@ -4,7 +4,10 @@ import AppPreview from './AppPreview'
 import testApp from '../example-apps/welcome.yml'
 import CodeEditorContainer from './CodeEditorContainer'
 
-export default React.createClass({
+import HTML5Backend from 'react-dnd-html5-backend'
+import { DragDropContext } from 'react-dnd'
+
+const StudioApp = React.createClass({
   render () {
     return <div className={styles.root}>
       <div className={styles.title}>
@@ -23,3 +26,5 @@ export default React.createClass({
     </div>
   }
 })
+
+export default DragDropContext(HTML5Backend)(StudioApp)

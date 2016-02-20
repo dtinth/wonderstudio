@@ -37,9 +37,6 @@
   margin 0 0 0 auto
   width 360px
 
-.widget
-  composes font from '../app/styles.styl'
-
 .newControl
   text-align center
   padding 24px 16px
@@ -64,3 +61,25 @@
       transform scale(0.95)
       background darken(#F0EFEE, 20%)
       border-color darken(#F0EFEE, 30%)
+
+.draggableWidget
+  cursor move
+  > .widget
+    pointer-events none
+  &.isDragging
+    opacity 0.25
+
+.dropHint
+  background #3949ab
+  position absolute
+  display none
+  box-sizing border-box
+  z-index 9999999
+  &.isHorizontal
+    display block
+    transform translateY(-50%)
+    right 0
+    height 3px
+    width 360px
+    border-radius 3px
+    box-shadow 0 0 3px white
