@@ -1,6 +1,7 @@
 
 import { findIndex, includes, without } from 'lodash'
 import u from 'updeep'
+import * as Components from '../app/Components'
 
 export const moveComponent = (component, position) => state => {
   const groups = state.ui
@@ -29,9 +30,19 @@ const updateComponentById = (id, update) => u({
   })
 })
 
-export const renameComponent = (component, name) => updateComponentById(component._id, {
-  name: name
-})
+export const renameComponent = (component, name) => (
+  updateComponentById(component._id, {
+    name: name
+  })
+)
+
+export const setComponentProperty = (component, name, value) => (
+  updateComponentById(component._id, component => {
+    const propertyDescriptors = Components[component.type].metadata.properties
+    const descriptor = propertyDescriptors[name]
+    return u({ props: descriptor.set(value) })(component)
+  })
+)
 
 export const getComponentById = (id) => state => {
   for (const group of state.ui) for (const component of group.components) {

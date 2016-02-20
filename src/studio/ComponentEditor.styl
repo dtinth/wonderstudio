@@ -9,7 +9,7 @@
   border-radius 6px
   background lighten(#F5F4F3, 40%)
   border 1px solid darken(#F5F4F3, 30%)
-  overflow-y hidden
+  overflow-y auto
   box-shadow 0 2px 8px rgba(black, 10%)
 
 .type
@@ -37,6 +37,9 @@
   position relative
   &.withTitle
     padding-left 128px
+  &.withTitle.isWide
+    padding-left 12px
+    padding-top 24px
 
 .fieldGroupTitle
   position absolute
@@ -54,3 +57,7 @@
   box-shadow 0 1px 1px darken(#F5F4F3, 10%)
   border-radius 5px
   padding 2px 4px
+
+.textarea
+  composes input
+  height 7em

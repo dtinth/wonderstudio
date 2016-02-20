@@ -24,12 +24,16 @@ const createPropertyDescriptionBuilder = name => {
       build: () => descriptor,
       coerce: mapper => update({
         set: setter => value => setter(mapper(value))
+      }),
+      input: (type, options = { }) => update({
+        input: { type, ...options }
       })
     }
   }
   return createBuilder({
     get: props => props[name],
-    set: value => u({ [name]: () => value })
+    set: value => u({ [name]: () => value }),
+    input: null
   })
 }
 
@@ -43,7 +47,7 @@ export function AppBar (props) {
 }
 AppBar.metadata = {
   properties: propertySet({
-    title: prop => prop.coerce(String)
+    title: prop => prop.coerce(String).input('text')
   })
 }
 
@@ -62,9 +66,9 @@ export function TextField (props) {
 }
 TextField.metadata = {
   properties: propertySet({
-    hintText: prop => prop.coerce(String),
-    floatingLabelText: prop => prop.coerce(String),
-    value: prop => prop.coerce(String)
+    hintText: prop => prop.coerce(String).input('text'),
+    floatingLabelText: prop => prop.coerce(String).input('text'),
+    value: prop => prop.coerce(String).input('text')
   })
 }
 
@@ -80,7 +84,7 @@ export function Button (props) {
 }
 Button.metadata = {
   properties: propertySet({
-    label: prop => prop.coerce(String),
+    label: prop => prop.coerce(String).input('text'),
     onclick: prop => prop
   })
 }
@@ -94,7 +98,7 @@ export function Label (props) {
 }
 Label.metadata = {
   properties: propertySet({
-    text: prop => prop.coerce(String)
+    text: prop => prop.coerce(String).input('textarea', { wide: true })
   })
 }
 
@@ -107,6 +111,6 @@ export function SectionHeader (props) {
 }
 SectionHeader.metadata = {
   properties: propertySet({
-    title: prop => prop.coerce(String)
+    title: prop => prop.coerce(String).input('text')
   })
 }

@@ -9,12 +9,33 @@ const SectionTitle = (props) => <div className={styles.sectionTitle}>
 
 const FieldGroup = (props) => <div
   className={classNames(styles.fieldGroup, {
-    [styles.withTitle]: props.title
+    [styles.withTitle]: props.title,
+    [styles.isWide]: props.wide
   })}
 >
   {props.title ? <div className={styles.fieldGroupTitle}>{props.title}</div> : null}
   {props.children}
 </div>
+
+const InputTypes = { }
+
+InputTypes['text'] = ({ value, onChange, descriptor }) => (
+  <input
+    className={styles.input}
+    placeholder={descriptor.input.placeholder}
+    value={value}
+    onChange={e => { onChange(e.target.value) }}
+  />
+)
+
+InputTypes['textarea'] = ({ value, onChange, descriptor }) => (
+  <textarea
+    className={styles.textarea}
+    placeholder={descriptor.input.placeholder}
+    value={value}
+    onChange={e => { onChange(e.target.value) }}
+  />
+)
 
 export default React.createClass({
   propTypes: {
@@ -25,9 +46,20 @@ export default React.createClass({
     const component = this.props.component
     const propertyDescriptors = Components[component.type].metadata.properties
     return Object.keys(propertyDescriptors).map(propertyName => {
-      // const descriptor = propertyDescriptors[propertyName]
-      return <FieldGroup title={propertyName}>
-        <input className={styles.input} placeholder='Text to display' value={component.props[propertyName]} />
+      const descriptor = propertyDescriptors[propertyName]
+      const input = descriptor.input
+      if (!input) return null
+      const Input = InputTypes[input.type]
+      return <FieldGroup title={propertyName} wide={input.wide}>
+        <Input
+          descriptor={descriptor}
+          onChange={newValue => {
+            this.props.dispatchToApp(app =>
+              app.setComponentProperty(component, propertyName, newValue)
+            )
+          }}
+          value={descriptor.get(component.props)}
+        />
       </FieldGroup>
     })
   },
