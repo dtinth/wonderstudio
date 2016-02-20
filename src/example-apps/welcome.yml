@@ -1,51 +1,61 @@
-components:
-  - type: AppBar
-    name: appBar
-    props:
-      title: 'Welcome!'
-  - type: Label
-    name: label1
-    props:
-      text: 'Welcome to wonderful.software/studio!'
-      style:
-        fontWeight: bold
-  - type: Label
-    name: label2
-    props:
-      text: This is where you can learn programming by building mobile apps and share share them with your friends!
-  - type: Label
-    name: label3
-    props:
-      text: Add controls to the application. Click on a control to edit its properties. Drag ’em around to rearrange. And breath life into your app with JavaScript code!
-  - type: SectionHeader
-    name: header1
-    props:
-      title: Example Application
-  - type: Label
-    name: label4
-    props:
-      text: Here’s an example application that adds two number together.
-  - type: TextField
-    name: textBox1
-    props:
-      floatingLabelText: 'A'
-      hintText: 'Enter some number'
-  - type: TextField
-    name: textBox2
-    props:
-      floatingLabelText: 'B'
-      hintText: 'Enter some number'
-  - type: Button
-    name: button
-    props:
-      label: 'Add em together'
-      primary: true
-  - type: Label
-    name: resultLabel
-    props:
-      text: 'Result will display here'
-      style:
-        textAlign: center
+ui:
+  - components:
+    - type: AppBar
+      name: appBar
+      props:
+        title: 'Welcome!'
+  - components:
+    - type: Label
+      name: label1
+      props:
+        text: 'Welcome to wonderful.software/studio!'
+        style:
+          fontWeight: bold
+  - components:
+    - type: Label
+      name: label2
+      props:
+        text: This is where you can learn programming by building mobile apps and share share them with your friends!
+  - components:
+    - type: Label
+      name: label3
+      props:
+        text: Add controls to the application. Click on a control to edit its properties. Drag ’em around to rearrange. And breath life into your app with JavaScript code!
+  - components:
+    - type: SectionHeader
+      name: header1
+      props:
+        title: Example Application
+  - components:
+    - type: Label
+      name: label4
+      props:
+        text: Here’s an example application that adds two number together.
+  - components:
+    - type: TextField
+      name: textBox1
+      props:
+        floatingLabelText: 'A'
+        hintText: 'Enter some number'
+  - components:
+    - type: TextField
+      name: textBox2
+      props:
+        floatingLabelText: 'B'
+        hintText: 'Enter some number'
+  - components:
+    - type: Button
+      name: button
+      props:
+        label: 'Add em together'
+        primary: true
+  - components:
+    - type: Label
+      name: resultLabel
+      props:
+        text: 'Result will display here'
+        style:
+          textAlign: center
 code: |
   button.onclick = () => {
     const a = +textBox1.value
