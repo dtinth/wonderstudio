@@ -28,6 +28,7 @@
     "react": "0.14.x",
     "react-dom": "0.14.x",
     "react-router": "^2.0.0",
+    "react-tap-event-plugin": "^0.2.2",
     "tern": "^0.17.0"
   },
   "devDependencies": {
