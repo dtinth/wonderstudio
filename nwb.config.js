@@ -5,7 +5,8 @@ module.exports = {
     'stylus-css': {
       query: {
         modules: true,
-        localIdentName: '[name]の[local]／[hash:base64:7]'
+        localIdentName: '[name]の[local]／[hash:base64:7]',
+        importLoaders: 2
       }
     },
     extra: [
