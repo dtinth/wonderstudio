@@ -1,5 +1,6 @@
 
 import React from 'react'
+import styles from './styles.styl'
 import RaisedButton from 'material-ui/lib/raised-button'
 import MaterialTextField from 'material-ui/lib/text-field'
 import MaterialAppBar from 'material-ui/lib/app-bar'
@@ -26,7 +27,7 @@ export function TextField (props) {
 }
 
 export function Button (props) {
-  return <div style={{ margin: '0 16px' }}>
+  return <div style={{ margin: '8px 16px' }}>
     <RaisedButton
       label={props.label}
       style={{ width: '100%' }}
@@ -35,7 +36,13 @@ export function Button (props) {
 }
 
 export function Label (props) {
-  return <div style={{ margin: '0 16px', whiteSpace: 'pre-wrap', ...(props.style || { }) }}>
+  return <div style={{ margin: '16px 16px', whiteSpace: 'pre-wrap', ...(props.style || { }) }}>
     {props.text}
+  </div>
+}
+
+export function SectionHeader (props) {
+  return <div className={styles.sectionHeader} style={props.style}>
+    {props.title}
   </div>
 }

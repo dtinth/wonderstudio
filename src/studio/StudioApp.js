@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './StudioApp.styl'
 import AppPreview from './AppPreview'
-import testApp from '../example-apps/adder.yml'
+import testApp from '../example-apps/welcome.yml'
 
 export default React.createClass({
   render () {
