@@ -1,0 +1,9 @@
+{
+  "firebase": "ss16-wonderstudio",
+  "public": "public",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
