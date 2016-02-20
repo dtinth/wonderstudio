@@ -1,7 +1,6 @@
 import React from 'react'
 import styles from './AppPreview.styl'
-
-import RaisedButton from 'material-ui/lib/raised-button'
+import * as Components from '../app/Components'
 
 export default React.createClass({
   propTypes: {
@@ -18,9 +17,12 @@ export default React.createClass({
     </div>
   },
   renderWidget (component) {
-    return <div>
-      <RaisedButton label={'WOW'} style={{ width: '100%' }} />
-    </div>
+    const Component = Components[component.type]
+    if (Component) {
+      return <Component {...component.props} />
+    } else {
+      return <div>Unknown component: <strong>{component.type}</strong></div>
+    }
   },
   render () {
     return <div className={styles.root}>

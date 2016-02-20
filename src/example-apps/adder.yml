@@ -1,12 +1,18 @@
 components:
-  - type: TextBox
+  - type: AppBar
+    name: appBar
+    props:
+      title: 'Number Adder!'
+  - type: TextField
     name: textBox1
     props:
       floatingLabelText: 'A'
-  - type: TextBox
+      hintText: 'Enter some number'
+  - type: TextField
     name: textBox2
     props:
       floatingLabelText: 'B'
+      hintText: 'Enter some number'
   - type: Button
     name: button
     props:
