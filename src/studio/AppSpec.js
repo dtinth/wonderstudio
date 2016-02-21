@@ -50,3 +50,16 @@ describe('getComponentById', function () {
     assert(component === null)
   })
 })
+
+describe('addNewComponent', function () {
+  const button1 = { _id: 'A', name: 'button1', type: 'Button', props: { } }
+
+  it('should generate a new name', function () {
+    const state = stateForComponents([ [ button1 ] ])
+    const nextState = App.addNewComponent('B', 'Button')(state)
+    const b = App.getComponentById('B')(nextState)
+    assert(b.type === 'Button')
+    assert(b.name === 'button2')
+    assert(b.props.label === 'button2')
+  })
+})

@@ -5,8 +5,8 @@ export default React.createClass({
   propTypes: {
     onClick: React.PropTypes.func
   },
-  onClick () {
-    this.props.onClick()
+  onClick (e) {
+    this.props.onClick(e)
   },
   componentDidMount () {
     window.addEventListener('click', this.onClick)

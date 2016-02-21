@@ -2,6 +2,8 @@
 import { findIndex, includes, without } from 'lodash'
 import u from 'updeep'
 import * as Components from '../app/Components'
+import { getUIComponentNames } from '../app/Utils'
+import { getComponentInitialProps } from '../app/AppState'
 
 export const moveComponent = (component, position) => state => {
   const groups = state.ui
@@ -35,6 +37,35 @@ export const renameComponent = (component, name) => (
     name: name
   })
 )
+
+export const addNewComponent = (id, componentType) => {
+  const newNameGivenExistingNames = existingNames => {
+    const prefix = componentType.substr(0, 1).toLowerCase() + componentType.substr(1)
+    for (let i = 1; ; i++) {
+      const name = prefix + i
+      if (!includes(existingNames, name)) return name
+    }
+  }
+  const newComponentGivenExistingNames = existingNames => {
+    const data = {
+      _id: id,
+      type: componentType,
+      name: newNameGivenExistingNames(existingNames),
+      props: { }
+    }
+    return { ...data, props: getComponentInitialProps(data) }
+  }
+  const newGroupForNewComponentGivenExistingNames = existingNames => ({
+    components: [ newComponentGivenExistingNames(existingNames) ]
+  })
+  const append = groups => [
+    ...groups,
+    newGroupForNewComponentGivenExistingNames(getUIComponentNames(groups))
+  ]
+  return u({
+    ui: append
+  })
+}
 
 export const setComponentProperty = (component, name, value) => (
   updateComponentById(component._id, component => {

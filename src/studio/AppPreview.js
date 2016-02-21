@@ -7,9 +7,11 @@ import { DragSource, DropTarget } from 'react-dnd'
 import { compose, pure, withState } from 'recompose'
 import classNames from 'classnames'
 import ComponentEditor from './ComponentEditor'
+import ComponentPicker from './ComponentPicker'
 import DocumentClickListener from './DocumentClickListener'
 import AppRunner from '../app/AppRunner'
 import AppViewer from '../app/AppViewer'
+import ObjectID from 'bson-objectid'
 
 const DraggableWidget = compose(
   DragSource('widget',
@@ -101,7 +103,7 @@ const AppPreviewEdit = compose(
     query: React.PropTypes.func
   },
   getInitialState () {
-    return { }
+    return { pickerVisible: false }
   },
   componentDidUpdate () {
     if (typeof this.props.dropTarget === 'number') {
@@ -111,6 +113,17 @@ const AppPreviewEdit = compose(
   },
   onUnselect () {
     this.props.dispatch(studio => studio.unselectComponent())
+  },
+  onSelectComponent (component) {
+    this.props.dispatch(studio => studio.selectComponent(component))
+    this.setState({ pickerVisible: false })
+  },
+  onPickComponent (type) {
+    const id = ObjectID.generate()
+    this.dispatchToApp(app => app.addNewComponent(id, type))
+    this.setState({ pickerVisible: false })
+    setTimeout(() => this.props.dispatch(studio => studio.selectComponentById(id)))
+    setTimeout(() => this._scroller.scrollTop += 999999)
   },
   dispatchToApp (message) {
     this.props.dispatch(studio => studio.toApp(message))
@@ -135,7 +148,7 @@ const AppPreviewEdit = compose(
       onDragEnd={this.onDragEnd}
       onClick={e => (
         e.stopPropagation(),
-        this.props.dispatch(studio => studio.selectComponent(component))
+        this.onSelectComponent(component)
       )}
     />
   },
@@ -155,6 +168,7 @@ const AppPreviewEdit = compose(
   renderComponentEditor () {
     const selectedComponent = this.getSelectedComponent()
     if (!selectedComponent) return null
+    if (this.state.pickerVisible) return null
     return <div>
       <DocumentClickListener onClick={this.onUnselect} />
       <div className={styles.componentEditor} onClick={e => e.stopPropagation()}>
@@ -162,16 +176,32 @@ const AppPreviewEdit = compose(
       </div>
     </div>
   },
+  renderComponentPicker () {
+    if (!this.state.pickerVisible) return null
+    return <div>
+      <DocumentClickListener onClick={this.onTogglePicker} />
+      <div className={styles.componentEditor} onClick={e => e.stopPropagation()}>
+        <ComponentPicker onPick={this.onPickComponent} />
+      </div>
+    </div>
+  },
+  onTogglePicker (e) {
+    if (!this.state.pickerVisible) {
+      this.onUnselect()
+    }
+    this.setState({ pickerVisible: !this.state.pickerVisible })
+    e.stopPropagation()
+  },
   render () {
     return this.props.connectDropTarget(<div>
-      <div className={styles.container}>
+      <div className={styles.container} ref={el => this._scroller = el}>
         <div className={styles.content} ref={el => this._contentWrapper = el}>
           <div className={styles.backdrop}></div>
           {this.props.state.app.ui.map(this.renderGroup)}
           <div className={styles.group}>
             <div className={styles.groupContent}>
               <div className={styles.newControl}>
-                <button>add a new control</button>
+                <button onClick={this.onTogglePicker}>add a new control</button>
               </div>
             </div>
           </div>
@@ -184,6 +214,7 @@ const AppPreviewEdit = compose(
         </div>
       </div>
       {this.renderComponentEditor()}
+      {this.renderComponentPicker()}
     </div>)
   }
 }))

@@ -1,6 +1,7 @@
 
 import { transform } from 'babel-standalone'
 import { chain } from 'lodash'
+import { getUIComponentNames } from '../app/Utils'
 import u from 'updeep'
 
 export function compile (app) {
@@ -19,8 +20,7 @@ export function compile (app) {
 
 function validateComponentNames (app) {
   const clashedNames = (chain(app.ui)
-    .map(group => group.components.map(component => component.name))
-    .flatten()
+    .thru(getUIComponentNames)
     .groupBy()
     .map((names, name) => [ name, names.length ])
     .filter(([ name, count ]) => count > 1)

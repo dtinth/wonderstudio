@@ -39,6 +39,7 @@ export const moveComponent = (component, position) => toApp(
 export const selectComponent = (component) => u({
   selectedComponentId: id => id === component._id ? null : component._id
 })
+export const selectComponentById = id => u({ selectedComponentId: () => id })
 
 export const getApp = () => state => state.app
 export const toApp = (message) => u({ app: app => message(App)(app) })
