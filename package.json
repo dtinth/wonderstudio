@@ -51,8 +51,10 @@
     "power-assert": "^1.2.0",
     "raw-loader": "^0.5.1",
     "react-proxy-loader": "^0.3.4",
+    "ride": "^0.1.0",
     "script-loader": "^0.6.1",
     "standard": "^6.0.7",
+    "style-loader": "^0.13.0",
     "worker-loader": "^0.7.0",
     "yaml-loader": "^0.1.0"
   },
