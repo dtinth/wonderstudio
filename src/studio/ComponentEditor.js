@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './ComponentEditor.styl'
 import classNames from 'classnames'
 import * as Components from '../app/Components'
+import { pure } from 'recompose'
 
 const SectionTitle = (props) => <div className={styles.sectionTitle}>
   {props.children}
@@ -19,25 +20,25 @@ const FieldGroup = (props) => <div
 
 const InputTypes = { }
 
-InputTypes['text'] = ({ value, onChange, descriptor }) => (
+InputTypes['text'] = pure(({ value, onChange, descriptor }) => (
   <input
     className={styles.input}
     placeholder={descriptor.input.placeholder}
     value={value}
     onChange={e => { onChange(e.target.value) }}
   />
-)
+))
 
-InputTypes['textarea'] = ({ value, onChange, descriptor }) => (
+InputTypes['textarea'] = pure(({ value, onChange, descriptor }) => (
   <textarea
     className={styles.textarea}
     placeholder={descriptor.input.placeholder}
     value={value}
     onChange={e => { onChange(e.target.value) }}
   />
-)
+))
 
-export default React.createClass({
+export default pure(React.createClass({
   propTypes: {
     component: React.PropTypes.object,
     dispatchToApp: React.PropTypes.func
@@ -85,4 +86,4 @@ export default React.createClass({
       {this.renderProperties()}
     </div>
   }
-})
+}))
