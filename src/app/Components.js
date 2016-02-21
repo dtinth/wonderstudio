@@ -28,12 +28,25 @@ const createPropertyDescriptionBuilder = name => {
       type: type => update({
         type: type
       }),
-      string: () => builder.type('string').coerce(String),
+      string: () => (builder
+        .type('string')
+        .coerce(String)
+        .default('')
+      ),
+      defaultsToName: () => (builder
+        .default(({ name }) => String(name || ''))
+      ),
       coerce: mapper => update({
         set: setter => value => setter(mapper(value))
       }),
       input: (type, options = { }) => update({
         input: { type, ...options }
+      }),
+      default: valueOrFunction => update({
+        default: () => (typeof valueOrFunction === 'function'
+          ? valueOrFunction
+          : () => valueOrFunction
+        )
       })
     }
     return builder
@@ -41,7 +54,8 @@ const createPropertyDescriptionBuilder = name => {
   return createBuilder({
     get: props => props[name],
     set: value => u({ [name]: () => value }),
-    input: null
+    input: null,
+    default: () => null
   })
 }
 
@@ -56,7 +70,11 @@ export function AppBar (props) {
 }
 AppBar.metadata = {
   properties: propertySet({
-    title: prop => prop.string().doc('Application title').input('text')
+    title: prop => (prop
+      .string()
+      .doc('Application title')
+      .input('text')
+    )
   })
 }
 
@@ -71,13 +89,31 @@ export function TextField (props) {
     floatingLabelStyle={{ paddingLeft: INPUT_PADDING }}
     inputStyle={{ paddingLeft: INPUT_PADDING }}
     value={props.value}
+    onChange={e => {
+      const value = e.target.value
+      props.onPropChange('value', value)
+      if (props.onchange) props.onchange(e)
+    }}
   />
 }
 TextField.metadata = {
   properties: propertySet({
-    hintText: prop => prop.string().doc('The placeholder text that will be displayed when this field is empty').input('text'),
-    floatingLabelText: prop => prop.string().doc('The text to display above the field’s value').input('text'),
-    value: prop => prop.string().doc('The text inside this text field').input('text')
+    hintText: prop => (prop
+      .string()
+      .doc('The placeholder text that will be displayed when this field is empty')
+      .input('text')
+    ),
+    floatingLabelText: prop => (prop
+      .string()
+      .defaultsToName()
+      .doc('The text to display above the field’s value')
+      .input('text')
+    ),
+    value: prop => (prop
+      .string()
+      .doc('The text inside this text field')
+      .input('text')
+    )
   })
 }
 
@@ -88,13 +124,22 @@ export function Button (props) {
     <RaisedButton
       label={props.label}
       style={{ width: '100%' }}
+      onClick={props.onclick}
     />
   </div>
 }
 Button.metadata = {
   properties: propertySet({
-    label: prop => prop.string().doc('The text to display on the button').input('text'),
-    onclick: prop => prop.type('fn()').doc('The function that will be invoked when the button is clicked')
+    label: prop => (prop
+      .string()
+      .defaultsToName()
+      .doc('The text to display on the button')
+      .input('text')
+    ),
+    onclick: prop => (prop
+      .type('fn()')
+      .doc('The function that will be invoked when the button is clicked')
+    )
   })
 }
 
@@ -107,7 +152,12 @@ export function Label (props) {
 }
 Label.metadata = {
   properties: propertySet({
-    text: prop => prop.string().doc('The label’s text').input('textarea', { wide: true })
+    text: prop => (prop
+      .string()
+      .defaultsToName()
+      .doc('The label’s text')
+      .input('textarea', { wide: true })
+    )
   })
 }
 
@@ -120,6 +170,11 @@ export function SectionHeader (props) {
 }
 SectionHeader.metadata = {
   properties: propertySet({
-    title: prop => prop.string().doc('The section title text').input('text')
+    title: prop => (prop
+      .string()
+      .defaultsToName()
+      .doc('The section title text')
+      .input('text')
+    )
   })
 }

@@ -1,5 +1,12 @@
 
-import { createStoreForCode, createUIInitializationCode } from './AppState'
+import {
+  createStoreForCode,
+  createUIInitializationCode,
+  createDenormalizedUIStateSelector,
+  getComponentInitialProps
+} from './AppState'
+
+import { matches } from 'lodash'
 
 describe('createStoreForCode', function () {
   it('should emit UI state from imperative code', function () {
@@ -23,6 +30,79 @@ describe('createStoreForCode', function () {
     assert(getButton().props.label === 'One')
     getButton().props.onclick()
     assert(getButton().props.label === 'OneTwo')
+  })
+})
+
+describe('createDenormalizedUIStateSelector', function () {
+  const normalizedUIState = {
+    components: {
+      1: {
+        type: 'Button',
+        props: { label: 'cool' }
+      },
+      2: {
+        type: 'Button',
+        props: { label: 'app' }
+      },
+      3: {
+        type: 'Button',
+        props: { label: 'pal' } // wanna use ‘bro’ — as in ‘cool story bro’ —
+        //                         but to avoid conflict
+        //                         http://alexjs.com/
+      }
+    },
+    ui: [
+      { components: [ '1' ] },
+      { components: [ '2' ] },
+      { components: [ '3' ] }
+    ]
+  }
+  it('should denormalize the UI state into each group', function () {
+    const selector = createDenormalizedUIStateSelector()
+    const denormalizedUIState = selector(normalizedUIState)
+    const expectedDenormalizedUIState = [
+      { components: [
+        {
+          type: 'Button',
+          props: { label: 'cool' }
+        }
+      ] },
+      { components: [
+        {
+          type: 'Button',
+          props: { label: 'app' }
+        }
+      ] },
+      { components: [
+        {
+          type: 'Button',
+          props: { label: 'pal' } // wanna use ‘bro’ — as in ‘cool story bro’ —
+          //                         but to avoid conflict
+          //                         http://alexjs.com/
+        }
+      ] }
+    ]
+    assert(matches(expectedDenormalizedUIState)(denormalizedUIState))
+  })
+  it('should memoize', function () {
+    const selector = createDenormalizedUIStateSelector()
+    assert(selector(normalizedUIState) === selector(normalizedUIState))
+  })
+  it('should inject _set key for setting prop', function () {
+    const selector = createDenormalizedUIStateSelector()
+    const ui = selector(normalizedUIState)
+    assert(typeof ui[0].components[0]._set === 'function')
+
+    let ok = false
+    ui[0].components[0]._set('text', 'cool')({
+      setComponentProperty: (id, name, value) => {
+        assert(typeof id === 'string')
+        assert(name === 'text')
+        assert(value === 'cool')
+        ok = true
+      }
+    })
+    assert(ok, 'setComponentProperty must be called')
   })
 })
 
@@ -51,5 +131,16 @@ describe('createUIInitializationCode', function () {
       { method: 'createButton', props: { label: 'cool bro' } },
       { method: 'appendGroup', group: [ { _id: 'x' } ] }
     ])
+  })
+})
+
+describe('getComponentInitialProps({ type, name, props })', function () {
+  it('should return the initial props for component, barring any missing props', function () {
+    const props = getComponentInitialProps({
+      type: 'Button',
+      name: 'button1',
+      props: { }
+    })
+    assert(props.label === 'button1')
   })
 })

@@ -2,23 +2,19 @@ import React from 'react'
 import styles from './AppRunner.styl'
 import Widget from './Widget'
 import WidgetGroup from './WidgetGroup'
-import { createUIInitializationCode, createStoreForCode } from './AppState'
+import { createStoreForApp, createDenormalizedUIStateSelector } from './AppState'
 
-/* eslint no-eval: 0 */
 export default React.createClass({
   propTypes: {
     app: React.PropTypes.object
   },
   getInitialState () {
-    const initializationCode = createUIInitializationCode(this.props.app.ui)
-    const code = eval(
-      '(function(runtime){"use strict";' +
-        initializationCode + ';' +
-        'eval(' + JSON.stringify(this.props.app.compiled.code) + ')' +
-      '})'
-    )
-    this._store = createStoreForCode(code)
+    this._store = createStoreForApp(this.props.app)
+    this._uiStateSelector = createDenormalizedUIStateSelector()
     return { storeState: this._store.getState() }
+  },
+  getUIState () {
+    return this._uiStateSelector(this.state.storeState)
   },
   componentDidMount () {
     this._unsubscribe = this._store.subscribe(() => this.setState({
@@ -29,7 +25,7 @@ export default React.createClass({
     this._unsubscribe()
   },
   renderWidget (component) {
-    return <Widget component={component} />
+    return <Widget component={component} dispatch={this._store.dispatchMessage} />
   },
   renderWidgetGroup (group) {
     return <WidgetGroup>
@@ -37,8 +33,9 @@ export default React.createClass({
     </WidgetGroup>
   },
   render () {
+    const ui = this.getUIState()
     return <div className={styles.root}>
-      {this.props.app.ui.map(this.renderWidgetGroup)}
+      {ui.map(this.renderWidgetGroup)}
     </div>
   }
 })
