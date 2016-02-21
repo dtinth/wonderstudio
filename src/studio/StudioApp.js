@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './StudioApp.styl'
 import AppPreview from './AppPreview'
 import CodeEditorContainer from './CodeEditorContainer'
+import MetaBar from './MetaBar'
 
 import HTML5Backend from 'react-dnd-html5-backend'
 import { DragDropContext } from 'react-dnd'
@@ -34,7 +35,12 @@ export default compose(
           <AppPreview state={this.props.state} dispatch={this.onDispatch} query={this.query} />
         </div>
         <div className={styles.right}>
-          <CodeEditorContainer code={this.props.state.app.code} />
+          <div className={styles.metabar}>
+            <MetaBar state={this.props.state} />
+          </div>
+          <div className={styles.codeEditor}>
+            <CodeEditorContainer code={this.props.state.app.code} />
+          </div>
         </div>
       </div>
     </div>

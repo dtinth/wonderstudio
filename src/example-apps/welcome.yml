@@ -69,9 +69,11 @@ ui:
 code: |
   // Enter your code here to make your application alive!
 
-  button.onclick = () => {
+  function onButtonClick () {
     const a = Number(textBox1.value)
     const b = Number(textBox2.value)
     const result = a + ' + ' + b + ' = ' + (a + b)
     resultLabel.text = result
   }
+
+  button.onclick = onButtonClick

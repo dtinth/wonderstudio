@@ -3,7 +3,7 @@ import CodeMirror from 'codemirror'
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/lib/codemirror.css'
 import styles from './CodeEditor.styl'
-import StandardFormatWorker from 'worker?name=StandardFormatWorker-[chunkhash].js!./StandardFormatWorker'
+import StandardFormatWorker from 'worker?name=StandardFormatWorker.js!./StandardFormatWorker'
 
 export default React.createClass({
   propTypes: {
@@ -45,8 +45,6 @@ export default React.createClass({
     // Babel integration
     // XXX: probably should move this somewhere else
     require.ensure([ ], () => {
-      const Babel = require('babel-standalone')
-      console.log(Babel.transform('const x=()=>{}', { presets: [ 'es2015' ] }))
     }, 'babel-standalone')
   },
   render () {
