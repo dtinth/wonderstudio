@@ -7,7 +7,7 @@ global.onmessage = e => {
   let code = null
   let error = null
   try {
-    global.require('standard-format').transform(e.data.code)
+    code = global.require('standard-format').transform(e.data.code)
   } catch (e) {
     if (e.index != null && e.lineNumber != null && e.column != null && e.description != null) {
       error = {
