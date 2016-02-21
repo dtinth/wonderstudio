@@ -91,7 +91,13 @@ export default React.createClass({
       worker.onmessage = e => {
         if (e.data.sequence === seq) {
           if (e.data.code) {
-            cm.setValue(e.data.code)
+            if (e.data.code !== cm.getValue()) {
+              const { scrollTop, scrollLeft } = cm.getScrollerElement()
+              const cursor = cm.getCursor()
+              cm.setValue(e.data.code)
+              cm.scrollTo(scrollLeft, scrollTop)
+              cm.setCursor(cursor)
+            }
           } else if (e.data.error) {
             if (/Unexpected end of input/.test(e.data.error.description)) {
               window.alert('Syntax Error:\nThere’s an unclosed block, parenthesis, or string.')
