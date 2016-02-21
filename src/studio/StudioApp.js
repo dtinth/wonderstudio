@@ -30,6 +30,16 @@ export default compose(
     })()
     return { state: Studio.getInitialState(this.props.initializationData) }
   },
+  componentDidMount () {
+    window.onbeforeunload = () => {
+      if (this.getStore().query(studio => studio.expensivelyCheckIfAppModified())) {
+        return 'You have unsaved changes!'
+      }
+    }
+  },
+  componentWillUnmount () {
+    window.onbeforeunload = () => { }
+  },
   onDispatch (message) {
     this.setState({ state: message(Studio)(this.state.state) })
   },

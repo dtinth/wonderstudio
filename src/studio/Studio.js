@@ -1,14 +1,22 @@
 
 import * as App from './App'
 import u from 'updeep'
+import { isEqual, omit } from 'lodash'
 
 export const getInitialState = initializationData => ({
   app: initializationData.app,
+  initialApp: initializationData.app,
   cloudRef: initializationData.cloudRef || null,
   running: false,
   compiling: false,
   publishingStatus: null
 })
+
+const stripCompiled = app => omit(app, 'compiled')
+export const expensivelyCheckIfAppModified = () => state => !isEqual(
+  stripCompiled(state.app),
+  stripCompiled(state.initialApp)
+)
 
 export const isRunning = () => state => !!state.running
 export const isCompiling = () => state => !!state.compiling
