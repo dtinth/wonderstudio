@@ -19,6 +19,10 @@ self.addEventListener('fetch', function (event) {
     .then(function (cache) {
       return (fetch(event.request)
         .then(function (response) {
+          // If response is not OK, prefer a cache
+          if (!response.ok) {
+            return cache.match(event.request).then(cached => cached || response)
+          }
           cache.put(event.request, response.clone())
           return response
         })
