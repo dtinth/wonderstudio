@@ -6,17 +6,25 @@ export const getInitialState = initializationData => ({
   app: initializationData.app,
   cloudRef: initializationData.cloudRef || null,
   running: false,
+  compiling: false,
   publishingStatus: null
 })
 
 export const isRunning = () => state => !!state.running
-export const startRunning = compiledApp => u({ running: () => compiledApp })
+export const isCompiling = () => state => !!state.compiling
+export const startCompiling = e => u({ compiling: true })
+export const startRunning = compiledApp => u({
+  running: () => compiledApp,
+  compiling: false
+})
 export const stopRunning = () => u({ running: false })
+export const errorCompiling = e => u({ compiling: false })
 export const getRunningCompiledApp = () => state => state.running
 export const isNew = () => state => !state.cloudRef
 export const getDeployOptions = () => state => state.cloudRef
 
 export const isPublishing = () => state => state.publishingStatus === 'loading'
+export const didPublish = () => state => state.publishingStatus === 'completed'
 export const startPublishing = () => u({ publishingStatus: 'loading' })
 export const finishPublishing = newCloudRef => u({
   publishingStatus: 'completed',

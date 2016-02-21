@@ -3,10 +3,7 @@ import styles from './ComponentEditor.styl'
 import classNames from 'classnames'
 import * as Components from '../app/Components'
 import { pure } from 'recompose'
-
-const SectionTitle = (props) => <div className={styles.sectionTitle}>
-  {props.children}
-</div>
+import Panel, { SectionTitle } from './Panel'
 
 const FieldGroup = (props) => <div
   className={classNames(styles.fieldGroup, {
@@ -66,9 +63,7 @@ export default pure(React.createClass({
   },
   render () {
     const component = this.props.component
-    return <div className={styles.root}>
-      <div className={styles.type}>{component.type}</div>
-
+    return <Panel title={component.type}>
       <SectionTitle>Name</SectionTitle>
       <FieldGroup>
         <input
@@ -84,6 +79,6 @@ export default pure(React.createClass({
 
       <SectionTitle>Properties</SectionTitle>
       {this.renderProperties()}
-    </div>
+    </Panel>
   }
 }))

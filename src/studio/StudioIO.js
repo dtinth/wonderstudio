@@ -20,8 +20,14 @@ function generateNewAppKeys () {
 }
 
 export async function runApp (store) {
-  const compiledApp = await compile(store)
-  store.dispatch(studio => studio.startRunning(compiledApp))
+  try {
+    store.dispatch(studio => studio.startCompiling())
+    const compiledApp = await compile(store)
+    store.dispatch(studio => studio.startRunning(compiledApp))
+  } catch (e) {
+    store.dispatch(studio => studio.errorCompiling(e))
+    window.alert('Compile Error!\n' + e.message)
+  }
 }
 
 export async function share (store) {

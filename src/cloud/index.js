@@ -4,6 +4,7 @@ import firebase from './firebase'
 export async function publishApplication ({ viewKey, editKey, app }) {
   if (!app.compiled) throw new Error('App is not compiled!')
   await firebase.child('apps').child(viewKey).set(app)
+  await firebase.child('editKeys').child(viewKey).set(editKey)
 }
 
 export async function canEditApplication ({ viewKey, editKey }) {

@@ -2,6 +2,7 @@
 import React from 'react'
 import styles from './MetaBar.styl'
 import Icon from 'react-fa'
+import { compose, pure, mapPropsOnChange } from 'recompose'
 import { share, runApp } from './StudioIO'
 
 const Button = ({ children, onClick, disabled }) => <button
@@ -12,9 +13,26 @@ const Button = ({ children, onClick, disabled }) => <button
   {children}
 </button>
 
-export default React.createClass({
+export default compose(
+  mapPropsOnChange([ 'store' ], ({ store }) => ({
+    didPublish: store.query(studio => studio.didPublish()),
+    store: store
+  })),
+  pure
+)(React.createClass({
   propTypes: {
-    store: React.PropTypes.object
+    store: React.PropTypes.object,
+    didPublish: React.PropTypes.bool
+  },
+  getInitialState () {
+    return {
+      showPublished: false
+    }
+  },
+  componentWillReceiveProps (nextProps) {
+    if (!this.props.didPublish && nextProps.didPublish) {
+      this.setState({ showPublished: true })
+    }
   },
   renderCompileButton () {
     const { store } = this.props
@@ -22,6 +40,8 @@ export default React.createClass({
       return <Button onClick={() => store.dispatch(studio => studio.stopRunning())}>
         <Icon className={styles.playIcon} name='stop' /> Stop Application
       </Button>
+    } else if (store.query(studio => studio.isCompiling())) {
+      return <Button disabled>Compiling…</Button>
     } else {
       return <Button onClick={this.onRun}>
         <Icon className={styles.playIcon} name='play' /> Run Application
@@ -31,12 +51,15 @@ export default React.createClass({
   renderShareButton () {
     const { store } = this.props
     if (store.query(studio => studio.isPublishing())) {
-      return <Button disabled>Saving...</Button>
+      return <Button disabled>Saving…</Button>
     } else {
       return <Button onClick={this.onShare}>
         <Icon name='share' /> Save and Share
       </Button>
     }
+  },
+  renderSuccess () {
+    return <div>SHARE IT</div>
   },
   onRun () {
     runApp(this.props.store)
@@ -46,9 +69,12 @@ export default React.createClass({
   },
   render () {
     return <div className={styles.root}>
-      {this.renderCompileButton()}
-      <div className={styles.spacer}></div>
-      {this.renderShareButton()}
+      <div className={styles.bar}>
+        {this.renderCompileButton()}
+        <div className={styles.spacer}></div>
+        {this.renderShareButton()}
+      </div>
+      {this.renderSuccess()}
     </div>
   }
-})
+}))
