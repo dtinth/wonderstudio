@@ -1,14 +1,22 @@
 import React from 'react'
-import uncompiledApp from '../example-apps/welcome.yml'
 import AppRunner from './AppRunner'
 import AppViewer from './AppViewer'
-import { compile } from '../compiler'
+import CloudAppPage from '../cloud/CloudAppPage'
 
-// TODO: Don’t compile in run mode. Compile in editor!
-const compiledApp = compile(uncompiledApp)
+const TheAppRunner = ({ app }) => <AppRunner app={app} component={AppViewer} />
 
 export default React.createClass({
+  propTypes: {
+    routeParams: React.PropTypes.object
+  },
   render () {
-    return <AppRunner app={compiledApp} component={AppViewer} />
+    return <CloudAppPage
+      cloudRef={{
+        viewKey: this.props.routeParams.viewKey,
+        editKey: this.props.routeParams.editKey
+      }}
+      component={TheAppRunner}
+      key={this.props.routeParams.viewKey}
+    />
   }
 })
