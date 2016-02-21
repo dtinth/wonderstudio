@@ -28,7 +28,7 @@ export default compose(
   },
   getInitialState () {
     return {
-      showPublished: true
+      showPublished: false
     }
   },
   componentWillReceiveProps (nextProps) {
