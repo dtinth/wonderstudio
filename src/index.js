@@ -1,8 +1,12 @@
-
 // Import React to use react-router
 import React from 'react'
 import { render } from 'react-dom'
 import { Router, Route, browserHistory } from 'react-router'
+
+// Performance measuring!
+if (process.env.NODE_ENV === 'development') {
+  window.Perf = require('react-addons-perf')
+}
 
 // Material-UI prerequisites
 import * as colors from 'material-ui/lib/styles/colors'

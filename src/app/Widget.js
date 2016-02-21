@@ -2,8 +2,9 @@
 import React from 'react'
 import * as Components from './Components'
 import styles from './Widget.styl'
+import { pure } from 'recompose'
 
-export default React.createClass({
+export default pure(React.createClass({
   propTypes: {
     component: React.PropTypes.object,
     dispatch: React.PropTypes.func
@@ -31,4 +32,4 @@ export default React.createClass({
       return <div className={styles.error}>Unknown component: <strong>{component.type}</strong></div>
     }
   }
-})
+}))
