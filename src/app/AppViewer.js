@@ -8,11 +8,11 @@ export default React.createClass({
     ui: React.PropTypes.object,
     dispatch: React.PropTypes.func
   },
-  renderWidget (component) {
-    return <Widget component={component} dispatch={this.props.dispatch} />
+  renderWidget (component, index) {
+    return <Widget component={component} key={index} dispatch={this.props.dispatch} />
   },
-  renderWidgetGroup (group) {
-    return <WidgetGroup>
+  renderWidgetGroup (group, index) {
+    return <WidgetGroup key={index}>
       {group.components.map(this.renderWidget)}
     </WidgetGroup>
   },
@@ -20,6 +20,9 @@ export default React.createClass({
     const ui = this.props.ui
     return <div className={styles.root}>
       {ui.map(this.renderWidgetGroup)}
+      <div className={styles.credit}>
+        Powered by wonderful.software/studio
+      </div>
     </div>
   }
 })
