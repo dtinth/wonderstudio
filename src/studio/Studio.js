@@ -31,6 +31,7 @@ export const finishPublishing = newCloudRef => u({
   cloudRef: () => newCloudRef
 })
 export const errorPublishing = e => u({ publishingStatus: 'error' })
+export const getCloudRef = () => state => state.cloudRef
 
 export const moveComponent = (component, position) => toApp(
   app => app.moveComponent(component, position)

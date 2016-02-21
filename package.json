@@ -43,7 +43,8 @@
     "reselect": "^2.0.3",
     "rx": "^4.0.8",
     "tern": "^0.17.0",
-    "updeep": "^0.13.0"
+    "updeep": "^0.13.0",
+    "whatwg-fetch": "^0.11.0"
   },
   "devDependencies": {
     "babel-plugin-espower": "^1.1.0",

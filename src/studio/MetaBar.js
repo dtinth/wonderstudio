@@ -4,6 +4,8 @@ import styles from './MetaBar.styl'
 import Icon from 'react-fa'
 import { compose, pure, mapPropsOnChange } from 'recompose'
 import { share, runApp } from './StudioIO'
+import SuccessPanel from './SuccessPanel'
+import DocumentClickListener from './DocumentClickListener'
 
 const Button = ({ children, onClick, disabled }) => <button
   className={styles.button}
@@ -26,7 +28,7 @@ export default compose(
   },
   getInitialState () {
     return {
-      showPublished: false
+      showPublished: true
     }
   },
   componentWillReceiveProps (nextProps) {
@@ -59,7 +61,12 @@ export default compose(
     }
   },
   renderSuccess () {
-    return <div>SHARE IT</div>
+    if (!this.state.showPublished) return null
+    const { store } = this.props
+    return <div className={styles.successPanel}>
+      <DocumentClickListener onClick={() => this.setState({ showPublished: false })} />
+      <SuccessPanel cloudRef={store.query(studio => studio.getCloudRef())} />
+    </div>
   },
   onRun () {
     runApp(this.props.store)
