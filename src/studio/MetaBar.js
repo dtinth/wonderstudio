@@ -1,6 +1,7 @@
 
 import React from 'react'
 import styles from './MetaBar.styl'
+import Icon from 'react-fa'
 
 const Button = ({ children, onClick }) => <button
   className={styles.button}
@@ -22,7 +23,9 @@ export default React.createClass({
   },
   render () {
     return <div className={styles.root}>
-      <Button onClick={() => doCompile(this.props.state.app)}>▶ Run Application</Button>
+      <Button onClick={() => doCompile(this.props.state.app)}>
+        <Icon className={styles.playIcon} name='play' /> Run Application
+      </Button>
     </div>
   }
 })
