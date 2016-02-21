@@ -26,6 +26,22 @@ export const moveComponent = (component, position) => state => {
   }
 }
 
+export const removeComponent = (component) => state => {
+  const groups = state.ui
+  const groupContainsComponent = group => includes(group.components, component)
+  const originalGroupIndex = findIndex(groups, groupContainsComponent)
+  if (originalGroupIndex === -1) return state
+  const originalGroup = groups[originalGroupIndex]
+  if (originalGroup.components.length !== 1) {
+    return state // unsupported yet
+  }
+  const newGroups = [
+    ...without(groups.slice(0, originalGroupIndex), originalGroup),
+    ...without(groups.slice(originalGroupIndex + 1), originalGroup)
+  ]
+  return u({ ui: () => newGroups })(state)
+}
+
 const updateComponentById = (id, update) => u({
   ui: u.map({
     components: u.map(u.if(({ _id }) => _id === id, update))

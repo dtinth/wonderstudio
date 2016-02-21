@@ -72,6 +72,7 @@ AppBar.metadata = {
   properties: propertySet({
     title: prop => (prop
       .string()
+      .defaultsToName()
       .doc('Application title')
       .input('text')
     )

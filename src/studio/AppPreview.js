@@ -12,6 +12,8 @@ import DocumentClickListener from './DocumentClickListener'
 import AppRunner from '../app/AppRunner'
 import AppViewer from '../app/AppViewer'
 import ObjectID from 'bson-objectid'
+import Portal from 'react-portal'
+import ContextMenu from './ContextMenu'
 
 const DraggableWidget = compose(
   DragSource('widget',
@@ -32,13 +34,17 @@ const DraggableWidget = compose(
     })
   ),
   pure
-)(({ component, connectDragSource, dragging, onClick, selected }) => {
+)(({ component, connectDragSource, dragging, onClick, selected, onContextMenu }) => {
   const className = classNames(styles.draggableWidget, {
     [styles.isDragging]: dragging,
     [styles.isSelected]: selected
   })
   return connectDragSource(
-    <div className={className} onClick={onClick}>
+    <div
+      className={className}
+      onClick={onClick}
+      onContextMenu={onContextMenu}
+    >
       <div className={styles.widget}>
         <Widget component={component} />
       </div>
@@ -103,7 +109,7 @@ const AppPreviewEdit = compose(
     query: React.PropTypes.func
   },
   getInitialState () {
-    return { pickerVisible: false }
+    return { pickerVisible: false, contextMenu: null }
   },
   componentDidUpdate () {
     if (typeof this.props.dropTarget === 'number') {
@@ -139,6 +145,19 @@ const AppPreviewEdit = compose(
       this.props.dispatch(studio => studio.moveComponent(sourceComponent, targetPosition))
     }
   },
+  onContextMenu (e, component) {
+    e.preventDefault()
+    this.setState({
+      contextMenu: {
+        component: component,
+        left: e.clientX,
+        top: e.clientY
+      }
+    })
+  },
+  onCloseContextMenu () {
+    this.setState({ contextMenu: null })
+  },
   renderWidget (component, index) {
     return <DraggableWidget
       component={component}
@@ -150,6 +169,7 @@ const AppPreviewEdit = compose(
         e.stopPropagation(),
         this.onSelectComponent(component)
       )}
+      onContextMenu={e => this.onContextMenu(e, component)}
     />
   },
   renderGroup (group, index) {
@@ -185,6 +205,21 @@ const AppPreviewEdit = compose(
       </div>
     </div>
   },
+  renderContextMenu () {
+    if (!this.state.contextMenu) return null
+    const contextMenu = this.state.contextMenu
+    return <Portal isOpened>
+      <div
+        style={{ zIndex: 1000000, position: 'fixed', left: contextMenu.left, top: contextMenu.top }}
+      >
+        <ContextMenu
+          onClose={this.onCloseContextMenu}
+          component={contextMenu.component}
+          dispatch={this.props.dispatch}
+        />
+      </div>
+    </Portal>
+  },
   onTogglePicker (e) {
     if (!this.state.pickerVisible) {
       this.onUnselect()
@@ -215,6 +250,7 @@ const AppPreviewEdit = compose(
       </div>
       {this.renderComponentEditor()}
       {this.renderComponentPicker()}
+      {this.renderContextMenu()}
     </div>)
   }
 }))
