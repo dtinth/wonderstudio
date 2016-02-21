@@ -63,7 +63,7 @@ export default compose(
   renderSuccess () {
     if (!this.state.showPublished) return null
     const { store } = this.props
-    return <div className={styles.successPanel}>
+    return <div className={styles.successPanel} onClick={e => e.stopPropagation()}>
       <DocumentClickListener onClick={() => this.setState({ showPublished: false })} />
       <SuccessPanel cloudRef={store.query(studio => studio.getCloudRef())} />
     </div>
