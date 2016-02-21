@@ -5,7 +5,7 @@ import { isEqual, omit } from 'lodash'
 
 export const getInitialState = initializationData => ({
   app: initializationData.app,
-  initialApp: initializationData.app,
+  lastSavedApp: initializationData.app,
   cloudRef: initializationData.cloudRef || null,
   running: false,
   compiling: false,
@@ -15,7 +15,7 @@ export const getInitialState = initializationData => ({
 const stripCompiled = app => omit(app, 'compiled')
 export const expensivelyCheckIfAppModified = () => state => !isEqual(
   stripCompiled(state.app),
-  stripCompiled(state.initialApp)
+  stripCompiled(state.lastSavedApp)
 )
 
 export const isRunning = () => state => !!state.running
@@ -33,11 +33,16 @@ export const getDeployOptions = () => state => state.cloudRef
 
 export const isPublishing = () => state => state.publishingStatus === 'loading'
 export const didPublish = () => state => state.publishingStatus === 'completed'
-export const startPublishing = () => u({ publishingStatus: 'loading' })
-export const finishPublishing = newCloudRef => u({
+export const startPublishing = () => state => u({
+  publishingStatus: 'loading',
+  savingApp: () => state.app
+})(state)
+export const finishPublishing = newCloudRef => state => u({
   publishingStatus: 'completed',
-  cloudRef: () => newCloudRef
-})
+  cloudRef: () => newCloudRef,
+  lastSavedApp: () => state.savingApp,
+  savingApp: () => undefined
+})(state)
 export const errorPublishing = e => u({ publishingStatus: 'error' })
 export const getCloudRef = () => state => state.cloudRef
 
