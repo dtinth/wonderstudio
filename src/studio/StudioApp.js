@@ -39,7 +39,10 @@ export default compose(
             <MetaBar state={this.props.state} />
           </div>
           <div className={styles.codeEditor}>
-            <CodeEditorContainer code={this.props.state.app.code} />
+            <CodeEditorContainer
+              code={this.props.state.app.code}
+              ui={this.props.state.app.ui}
+            />
           </div>
         </div>
       </div>

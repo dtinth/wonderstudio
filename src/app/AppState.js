@@ -77,3 +77,17 @@ export function createStoreForCode (code) {
   code(createRuntime(dispatch, query))
   return store
 }
+
+export function createUIInitializationCode (ui) {
+  const statements = [ 'var ui = { }' ]
+  const ref = name => 'ui[' + JSON.stringify(name) + ']'
+  for (const group of ui) {
+    const names = [ ]
+    for (const component of group.components) {
+      statements.push(ref(component.name) + ' = runtime.create' + component.type + '(' + JSON.stringify(component.props) + ')')
+      names.push(component.name)
+    }
+    statements.push('runtime.appendGroup([ ' + names.map(ref).join(', ') + ' ])')
+  }
+  return statements.join(';\n') + ';'
+}

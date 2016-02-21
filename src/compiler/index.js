@@ -5,7 +5,11 @@ import u from 'updeep'
 
 export function compile (app) {
   validateComponentNames(app)
-  const compiledCode = transform(app.code, { presets: [ 'es2015' ], sourceMaps: 'inline' })
+  const compiledCode = transform(app.code, {
+    presets: [ 'es2015' ],
+    sourceMaps: 'inline',
+    filename: 'user.js'
+  })
   return u({
     compiled: () => ({
       code: compiledCode.code
