@@ -71,6 +71,14 @@ const createPropertyDescriptionBuilder = name => {
   })
 }
 
+const preset = {
+  disabled: prop => (prop
+    .boolean()
+    .doc('If true, this control cannot be used')
+    .input('checkbox')
+  )
+}
+
 // =============================================================================
 
 export function AppBar (props) {
@@ -101,6 +109,7 @@ export function Button (props) {
       onClick={props.onclick}
       primary={props.primary}
       secondary={props.secondary}
+      disabled={props.disabled}
     />
   </div>
 }
@@ -130,6 +139,7 @@ Button.metadata = {
       .doc('If true, this button will have a secondary style')
       .input('checkbox')
     ),
+    disabled: preset.disabled,
     onclick: prop => (prop
       .callback('when the button is clicked')
     )
@@ -147,6 +157,7 @@ export function Checkbox (props) {
         props.onPropChange('checked', !props.checked)
         if (props.onchange) props.onchange(e)
       }}
+      disabled={props.disabled}
     />
   </div>
 }
@@ -163,6 +174,7 @@ Checkbox.metadata = {
       .doc('True if this checkbox is checked')
       .input('checkbox')
     ),
+    disabled: preset.disabled,
     onchange: prop => (prop
       .callback('after the checkbox has been toggled')
     )
@@ -230,6 +242,7 @@ export function TextField (props) {
       props.onPropChange('value', value)
       if (props.onchange) props.onchange(e)
     }}
+    disabled={props.disabled}
     {...props.multiline ? { multiLine: true, rows: 3, rowsMax: 5 } : { }}
   />
 }
@@ -256,6 +269,7 @@ TextField.metadata = {
       .doc('If true, will allow user to enter multiple lines of text')
       .input('checkbox')
     ),
+    disabled: preset.disabled,
     onchange: prop => (prop
       .callback('when the text is entered')
     )
