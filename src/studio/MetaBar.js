@@ -54,9 +54,13 @@ export default compose(
     const { store } = this.props
     if (store.query(studio => studio.isPublishing())) {
       return <Button disabled>Saving…</Button>
-    } else {
+    } else if (store.query(studio => studio.isNew())) {
       return <Button onClick={this.onShare}>
         <Icon name='share' /> Save and Share
+      </Button>
+    } else {
+      return <Button onClick={this.onShare}>
+        <Icon name='upload' /> Publish Update
       </Button>
     }
   },
