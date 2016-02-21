@@ -52,7 +52,9 @@ const createPropertyDescriptionBuilder = name => {
           ? valueOrFunction
           : () => valueOrFunction
         )
-      })
+      }),
+      set: newSetter => update({ set: () => newSetter }),
+      get: newGetter => update({ get: () => newGetter })
     }
     return builder
   }
@@ -100,6 +102,7 @@ export function TextField (props) {
       props.onPropChange('value', value)
       if (props.onchange) props.onchange(e)
     }}
+    {...props.multiline ? { multiLine: true, rows: 3, rowsMax: 5 } : { }}
   />
 }
 TextField.metadata = {
@@ -118,7 +121,12 @@ TextField.metadata = {
     value: prop => (prop
       .string()
       .doc('The text inside this text field')
-      .input('text')
+      .input('textarea')
+    ),
+    multiline: prop => (prop
+      .boolean()
+      .doc('If true, will allow user to enter multiple lines of text')
+      .input('checkbox')
     )
   })
 }
@@ -131,6 +139,8 @@ export function Button (props) {
       label={props.label}
       style={{ width: '100%' }}
       onClick={props.onclick}
+      primary={props.primary}
+      secondary={props.secondary}
     />
   </div>
 }
@@ -141,6 +151,24 @@ Button.metadata = {
       .defaultsToName()
       .doc('The text to display on the button')
       .input('text')
+    ),
+    primary: prop => (prop
+      .set(value => u({
+        primary: value,
+        secondary: x => x && !value
+      }))
+      .boolean()
+      .doc('If true, this button will have a very attractive style')
+      .input('checkbox')
+    ),
+    secondary: prop => (prop
+      .set(value => u({
+        primary: x => x && !value,
+        secondary: value
+      }))
+      .boolean()
+      .doc('If true, this button will have a secondary style')
+      .input('checkbox')
     ),
     onclick: prop => (prop
       .type('fn()')
