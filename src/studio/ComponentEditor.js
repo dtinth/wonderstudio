@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import * as Components from '../app/Components'
 import { pure } from 'recompose'
 import Panel, { SectionTitle } from './Panel'
+import Icon from 'react-fa'
 
 const FieldGroup = (props) => <div
   className={classNames(styles.fieldGroup, {
@@ -33,6 +34,18 @@ InputTypes['textarea'] = pure(({ value, onChange, descriptor }) => (
     value={value}
     onChange={e => { onChange(e.target.value) }}
   />
+))
+
+InputTypes['checkbox'] = pure(({ value, onChange, descriptor }) => (
+  <div className={styles.checkbox}>
+    <input
+      type='checkbox'
+      className={styles.checkboxInput}
+      checked={value}
+      onChange={e => { onChange(e.target.checked) }}
+    />
+    <Icon name='check' className={styles.checkmark} />
+  </div>
 ))
 
 export default pure(React.createClass({

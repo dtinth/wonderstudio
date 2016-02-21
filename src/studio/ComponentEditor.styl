@@ -20,6 +20,29 @@
 .input
   composes input from './common.styl'
 
+.checkbox
+  position relative
+
+.checkboxInput
+  composes field from './common.styl'
+  appearance none
+  width 24px
+  height 24px
+  cursor pointer
+  &:checked
+    background darken(#F5F4F3, 64%)
+
+.checkmark
+  display none
+  position absolute
+  pointer-events none
+  color white
+  top 5px
+  left 4px
+
+.checkboxInput:checked + .checkmark
+  display block
+
 .textarea
   composes input
   height 7em

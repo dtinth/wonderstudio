@@ -11,8 +11,7 @@ ui:
       _id: 'c2'
       props:
         text: 'Welcome to wonderful.software/studio!'
-        style:
-          fontWeight: bold
+        bold: true
   - components:
     - type: Label
       name: label2
@@ -64,8 +63,6 @@ ui:
       _id: 'c10'
       props:
         text: 'Result will display here'
-        style:
-          textAlign: center
 code: |
   // Enter your code here to make your application alive!
 

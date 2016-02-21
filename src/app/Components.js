@@ -33,6 +33,11 @@ const createPropertyDescriptionBuilder = name => {
         .coerce(String)
         .default('')
       ),
+      boolean: () => (builder
+        .type('bool')
+        .coerce(Boolean)
+        .default(false)
+      ),
       defaultsToName: () => (builder
         .default(({ name }) => String(name || ''))
       ),
@@ -147,7 +152,11 @@ Button.metadata = {
 // =============================================================================
 
 export function Label (props) {
-  return <div style={{ margin: '8px 16px', whiteSpace: 'pre-wrap', ...(props.style || { }) }}>
+  return <div style={{
+    margin: '8px 16px',
+    whiteSpace: 'pre-wrap',
+    fontWeight: props.bold ? 'bold' : 'normal'
+  }}>
     {props.text}
   </div>
 }
@@ -158,6 +167,11 @@ Label.metadata = {
       .defaultsToName()
       .doc('The label’s text')
       .input('textarea', { wide: true })
+    ),
+    bold: prop => (prop
+      .boolean()
+      .doc('Whether or not to display text in bold')
+      .input('checkbox')
     )
   })
 }
