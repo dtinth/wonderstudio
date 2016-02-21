@@ -44,7 +44,7 @@ export const setComponentProperty = (component, name, value) => (
   })
 )
 
-export const changeCode = code => (console.log(code), u({ code: () => code }))
+export const changeCode = code => u({ code: () => code })
 
 export const getComponentById = (id) => state => {
   for (const group of state.ui) for (const component of group.components) {

@@ -7,6 +7,20 @@ import StandardFormatWorker from 'worker?name=StandardFormatWorker.js!./Standard
 import { Observable, CompositeDisposable, ReplaySubject, Subject } from 'rx'
 import classNames from 'classnames'
 
+const Atom = () => {
+  let cur = null
+  return {
+    swap (behave) {
+      try {
+        if (cur) cur()
+      } finally {
+        cur = null
+        cur = behave()
+      }
+    }
+  }
+}
+
 export default React.createClass({
   propTypes: {
     code: React.PropTypes.string,
@@ -49,6 +63,18 @@ export default React.createClass({
       disposables.add(action川.subscribe(f => f()))
     }
 
+    // error line highlight
+    const highlightErrorLine = (() => {
+      const atom = new Atom()
+      cm.on('change', () => atom.swap(() => { }))
+      return lineNumber => {
+        atom.swap(() => (
+          cm.getDoc().addLineClass(lineNumber, 'background', 'CodeEditor-error'),
+          () => cm.getDoc().removeLineClass(lineNumber, 'background', 'CodeEditor-error')
+        ))
+      }
+    })()
+
     // standard-format
     {
       let seq = 1
@@ -64,7 +90,17 @@ export default React.createClass({
       })
       worker.onmessage = e => {
         if (e.data.sequence === seq) {
-          cm.setValue(e.data.code)
+          if (e.data.code) {
+            cm.setValue(e.data.code)
+          } else if (e.data.error) {
+            if (/Unexpected end of input/.test(e.data.error.description)) {
+              window.alert('Syntax Error:\nThere’s an unclosed block, parenthesis, or string.')
+            } else {
+              window.alert('Syntax Error:\n' + e.data.error.description + '\n\nLine: ' + e.data.error.lineNumber)
+              highlightErrorLine(e.data.error.lineNumber - 1)
+            }
+            cm.focus()
+          }
         }
       }
     }
