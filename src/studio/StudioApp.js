@@ -41,6 +41,9 @@ export default compose(
           <div className={styles.codeEditor}>
             <CodeEditorContainer
               code={this.props.state.app.code}
+              onChange={code => this.onDispatch(studio =>
+                studio.toApp(app => app.changeCode(code))
+              )}
               ui={this.props.state.app.ui}
               disabled={this.query(studio => studio.isRunning())}
             />

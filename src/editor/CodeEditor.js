@@ -4,13 +4,14 @@ import 'codemirror/mode/javascript/javascript'
 import 'codemirror/lib/codemirror.css'
 import styles from './CodeEditor.styl'
 import StandardFormatWorker from 'worker?name=StandardFormatWorker.js!./StandardFormatWorker'
-import { Observable, CompositeDisposable, ReplaySubject } from 'rx'
+import { Observable, CompositeDisposable, ReplaySubject, Subject } from 'rx'
 import classNames from 'classnames'
 
 export default React.createClass({
   propTypes: {
     code: React.PropTypes.string,
-    disabled: React.PropTypes.bool
+    disabled: React.PropTypes.bool,
+    onChange: React.PropTypes.func
   },
   componentDidMount () {
     const disposables = this._disposables = new CompositeDisposable()
@@ -72,6 +73,17 @@ export default React.createClass({
     // XXX: probably should move this somewhere else
     require.ensure([ ], () => {
     }, 'babel-standalone')
+
+    // notifications
+    {
+      const changes川 = new Subject()
+      cm.on('change', () => {
+        changes川.onNext(cm.getValue())
+      })
+      disposables.add(changes川.debounce(138).subscribe(value => {
+        if (this.props.onChange) this.props.onChange(value)
+      }))
+    }
   },
   componentWillReceiveProps (nextProps) {
     this._props川.onNext(nextProps)

@@ -8,6 +8,8 @@ import { compose, pure, withState } from 'recompose'
 import classNames from 'classnames'
 import ComponentEditor from './ComponentEditor'
 import DocumentClickListener from './DocumentClickListener'
+import AppRunner from '../app/AppRunner'
+import AppViewer from '../app/AppViewer'
 
 const DraggableWidget = compose(
   DragSource('widget',
@@ -187,8 +189,22 @@ const AppPreviewEdit = compose(
 }))
 
 const AppPreviewRun = React.createClass({
+  propTypes: {
+    dispatch: React.PropTypes.func,
+    query: React.PropTypes.func
+  },
   render () {
-    return <div>RUNNING APP</div>
+    return <div className={styles.container}>
+      <div className={styles.content}>
+        <div className={styles.backdrop}></div>
+        <div className={styles.preview}>
+          <AppRunner
+            app={this.props.query(studio => studio.getRunningCompiledApp())}
+            component={AppViewer}
+          />
+        </div>
+      </div>
+    </div>
   }
 })
 
