@@ -12,20 +12,29 @@ const Button = ({ children, onClick }) => <button
 
 import { compile } from '../compiler'
 
-function doCompile (app) {
-  console.log(compile(app))
-}
-
 export default React.createClass({
   propTypes: {
-    onClick: React.PropTypes.func,
+    dispatch: React.PropTypes.func,
+    query: React.PropTypes.func,
     state: React.PropTypes.object
+  },
+  renderCompileButton () {
+    if (this.props.query(studio => studio.isRunning())) {
+      return <Button onClick={() => this.props.dispatch(studio => studio.stopRunning())}>
+        <Icon className={styles.playIcon} name='stop' /> Stop Application
+      </Button>
+    } else {
+      return <Button onClick={() => {
+        const compiledApp = compile(this.props.state.app)
+        this.props.dispatch(studio => studio.startRunning(compiledApp))
+      }}>
+        <Icon className={styles.playIcon} name='play' /> Run Application
+      </Button>
+    }
   },
   render () {
     return <div className={styles.root}>
-      <Button onClick={() => doCompile(this.props.state.app)}>
-        <Icon className={styles.playIcon} name='play' /> Run Application
-      </Button>
+      {this.renderCompileButton()}
     </div>
   }
 })

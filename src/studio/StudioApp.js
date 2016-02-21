@@ -36,12 +36,13 @@ export default compose(
         </div>
         <div className={styles.right}>
           <div className={styles.metabar}>
-            <MetaBar state={this.props.state} />
+            <MetaBar state={this.props.state} dispatch={this.onDispatch} query={this.query} />
           </div>
           <div className={styles.codeEditor}>
             <CodeEditorContainer
               code={this.props.state.app.code}
               ui={this.props.state.app.ui}
+              disabled={this.query(studio => studio.isRunning())}
             />
           </div>
         </div>

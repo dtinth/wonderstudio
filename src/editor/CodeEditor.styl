@@ -67,3 +67,17 @@ codemirror-theme()
     .CodeMirror-Tern-farg-current
       text-decoration none
       font-weight bold
+
+.cover
+  position absolute
+  top 0
+  right 0
+  bottom 0
+  left 0
+  z-index 5
+  pointer-events none
+  background darken(#f5f4f3, 40%)
+  transition 0.2s opacity
+  opacity 0
+  &.isVisible
+    opacity 0.4

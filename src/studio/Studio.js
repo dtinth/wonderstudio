@@ -3,7 +3,11 @@ import * as App from './App'
 import u from 'updeep'
 import testApp from '../example-apps/welcome.yml'
 
-export const getInitialState = () => ({ app: testApp })
+export const getInitialState = () => ({ app: testApp, running: false })
+
+export const isRunning = () => state => !!state.running
+export const startRunning = compiledApp => u({ running: () => compiledApp })
+export const stopRunning = () => u({ running: false })
 
 export const moveComponent = (component, position) => u({
   app: App.moveComponent(component, position)

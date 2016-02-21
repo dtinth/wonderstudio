@@ -70,7 +70,7 @@ function calculateTop (contentWrapper, index) {
   })() - contentWrapper.getBoundingClientRect().top
 }
 
-const AppPreview = compose(
+const AppPreviewEdit = compose(
   DropTarget('widget',
     {
       hover (props, monitor, component) {
@@ -186,4 +186,22 @@ const AppPreview = compose(
   }
 }))
 
-export default AppPreview
+const AppPreviewRun = React.createClass({
+  render () {
+    return <div>RUNNING APP</div>
+  }
+})
+
+export default React.createClass({
+  propTypes: {
+    dispatch: React.PropTypes.func,
+    query: React.PropTypes.func
+  },
+  render () {
+    if (this.props.query(studio => studio.isRunning())) {
+      return <AppPreviewRun {...this.props} />
+    } else {
+      return <AppPreviewEdit {...this.props} />
+    }
+  }
+})

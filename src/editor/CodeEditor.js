@@ -5,14 +5,16 @@ import 'codemirror/lib/codemirror.css'
 import styles from './CodeEditor.styl'
 import StandardFormatWorker from 'worker?name=StandardFormatWorker.js!./StandardFormatWorker'
 import { Observable, CompositeDisposable, ReplaySubject } from 'rx'
+import classNames from 'classnames'
 
 export default React.createClass({
   propTypes: {
-    code: React.PropTypes.string
+    code: React.PropTypes.string,
+    disabled: React.PropTypes.bool
   },
   componentDidMount () {
-    this._disposables = new CompositeDisposable()
-    this._props川 = new ReplaySubject(1)
+    const disposables = this._disposables = new CompositeDisposable()
+    const props川 = this._props川 = new ReplaySubject(1)
     this._props川.onNext(this.props)
     this._tern川 = new ReplaySubject(1)
 
@@ -22,6 +24,12 @@ export default React.createClass({
       lineNumbers: true,
       viewportMargin: Infinity
     })
+
+    // enabled/disabled
+    {
+      const disabled川 = props川.map(props => props.disabled).distinctUntilChanged()
+      disposables.add(disabled川.subscribe(disabled => cm.setOption('readOnly', disabled)))
+    }
 
     // tern
     require.ensure([ ], () => {
@@ -33,11 +41,11 @@ export default React.createClass({
 
     // tern completions
     {
-      const initCode川 = this._props川.map(props => props.initCode).distinctUntilChanged()
+      const initCode川 = props川.map(props => props.initCode).distinctUntilChanged()
       const action川 = Observable.combineLatest(this._tern川, initCode川,
         (tern, initCode) => () => tern.server.addFile('init.js', initCode)
       )
-      this._disposables.add(action川.subscribe(f => f()))
+      disposables.add(action川.subscribe(f => f()))
     }
 
     // standard-format
@@ -75,6 +83,9 @@ export default React.createClass({
     return <div className={styles.root}>
       <div className={styles.editor} ref={element => this._editorContainer = element}>
       </div>
+      <div className={classNames(styles.cover, {
+        [styles.isVisible]: this.props.disabled
+      })}></div>
     </div>
   }
 })
