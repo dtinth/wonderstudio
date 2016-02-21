@@ -5,7 +5,7 @@ import WidgetGroup from './WidgetGroup'
 
 export default React.createClass({
   propTypes: {
-    ui: React.PropTypes.object,
+    ui: React.PropTypes.array,
     dispatch: React.PropTypes.func
   },
   renderWidget (component, index) {
