@@ -3,6 +3,7 @@ import AppRunner from './AppRunner'
 import AppViewer from './AppViewer'
 import CloudAppPage from '../cloud/CloudAppPage'
 import { inferApplicationName } from './Utils'
+import withServiceWorker from './withServiceWorker'
 
 const TheAppRunner = React.createClass({
   propTypes: {
@@ -12,10 +13,10 @@ const TheAppRunner = React.createClass({
     setTimeout(() => {
       // Wow cool hack to generate a manifest on-the-fly!!
       var manifest = {
-        short_name: inferApplicationName(this.props.app),
+        short_name: inferApplicationName({ app: this.props.app }),
         icons: [
           {
-            src: '/images/default_icon.png',
+            src: 'https://ss16-wonderstudio.firebaseapp.com/images/default_icon.png',
             sizes: '144x144',
             type: 'image/png'
           }
@@ -38,7 +39,7 @@ const TheAppRunner = React.createClass({
   }
 })
 
-export default React.createClass({
+export default withServiceWorker(React.createClass({
   propTypes: {
     routeParams: React.PropTypes.object
   },
@@ -52,4 +53,4 @@ export default React.createClass({
       key={this.props.routeParams.viewKey}
     />
   }
-})
+}))

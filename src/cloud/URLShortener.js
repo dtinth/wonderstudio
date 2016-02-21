@@ -8,7 +8,7 @@ export async function shorten (longUrl) {
   xhr.open('POST', 'https://www.googleapis.com/urlshortener/v1/url?key=' + API_KEY, true)
   xhr.setRequestHeader('Content-Type', 'application/json')
   const result = await new Promise((resolve, reject) => {
-    xhr.onload = () => resolve(xhr.response)
+    xhr.onload = () => resolve(xhr.responseText)
     xhr.onerror = e => reject(e)
     xhr.send(request)
   })
