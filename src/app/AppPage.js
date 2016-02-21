@@ -23,7 +23,7 @@ const TheAppRunner = React.createClass({
         ],
         display: 'standalone'
       }
-      const url = 'data:application/json;base64,' + window.btoa(JSON.stringify(manifest))
+      const url = 'data:application/json;base64,' + window.btoa(unescape(encodeURIComponent(JSON.stringify(manifest))))
       const link = document.createElement('link')
       link.href = url
       link.rel = 'manifest'
