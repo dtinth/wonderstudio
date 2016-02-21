@@ -6,22 +6,32 @@ import MetaBar from './MetaBar'
 
 import HTML5Backend from 'react-dnd-html5-backend'
 import { DragDropContext } from 'react-dnd'
-import { withState, compose } from 'recompose'
+import { compose } from 'recompose'
 import * as Studio from './Studio'
+import { createSelector } from 'reselect'
 
 export default compose(
   DragDropContext(HTML5Backend),
-  withState('state', 'onUpdateState', Studio.getInitialState())
 )(React.createClass({
   propTypes: {
-    state: React.PropTypes.object,
-    onUpdateState: React.PropTypes.func
+    initializationData: React.PropTypes.object
+  },
+  getInitialState () {
+    this.getStore = (() => {
+      const selector = createSelector(
+        component => this.state.state,
+        state => ({
+          state,
+          dispatch: this.onDispatch,
+          query: message => message(Studio)(state)
+        })
+      )
+      return () => selector(this)
+    })()
+    return { state: Studio.getInitialState(this.props.initializationData) }
   },
   onDispatch (message) {
-    this.props.onUpdateState(message(Studio))
-  },
-  query (message) {
-    return message(Studio)(this.props.state)
+    this.setState({ state: message(Studio)(this.state.state) })
   },
   render () {
     return <div className={styles.root}>
@@ -32,20 +42,20 @@ export default compose(
       </div>
       <div className={styles.middle}>
         <div className={styles.left}>
-          <AppPreview state={this.props.state} dispatch={this.onDispatch} query={this.query} />
+          <AppPreview {...this.getStore()} />
         </div>
         <div className={styles.right}>
           <div className={styles.metabar}>
-            <MetaBar state={this.props.state} dispatch={this.onDispatch} query={this.query} />
+            <MetaBar store={this.getStore()} />
           </div>
           <div className={styles.codeEditor}>
             <CodeEditorContainer
-              code={this.props.state.app.code}
+              code={this.state.state.app.code}
               onChange={code => this.onDispatch(studio =>
                 studio.toApp(app => app.changeCode(code))
               )}
-              ui={this.props.state.app.ui}
-              disabled={this.query(studio => studio.isRunning())}
+              ui={this.state.state.app.ui}
+              disabled={this.getStore().query(studio => studio.isRunning())}
             />
           </div>
         </div>

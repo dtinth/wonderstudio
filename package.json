@@ -12,7 +12,8 @@
       "it",
       "xdescribe",
       "xit"
-    ]
+    ],
+    "parser": "babel-eslint"
   },
   "scripts": {
     "build": "nwb build",
@@ -21,6 +22,7 @@
     "test": "nwb test"
   },
   "dependencies": {
+    "babel-polyfill": "^6.5.0",
     "babel-standalone": "^6.4.4",
     "bson-objectid": "^1.1.4",
     "classnames": "^2.2.3",

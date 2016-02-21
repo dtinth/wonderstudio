@@ -2,39 +2,53 @@
 import React from 'react'
 import styles from './MetaBar.styl'
 import Icon from 'react-fa'
+import { share, runApp } from './StudioIO'
 
-const Button = ({ children, onClick }) => <button
+const Button = ({ children, onClick, disabled }) => <button
   className={styles.button}
   onClick={onClick}
+  disabled={disabled}
 >
   {children}
 </button>
 
-import { compile } from '../compiler'
-
 export default React.createClass({
   propTypes: {
-    dispatch: React.PropTypes.func,
-    query: React.PropTypes.func,
-    state: React.PropTypes.object
+    store: React.PropTypes.object
   },
   renderCompileButton () {
-    if (this.props.query(studio => studio.isRunning())) {
-      return <Button onClick={() => this.props.dispatch(studio => studio.stopRunning())}>
+    const { store } = this.props
+    if (store.query(studio => studio.isRunning())) {
+      return <Button onClick={() => store.dispatch(studio => studio.stopRunning())}>
         <Icon className={styles.playIcon} name='stop' /> Stop Application
       </Button>
     } else {
-      return <Button onClick={() => {
-        const compiledApp = compile(this.props.state.app)
-        this.props.dispatch(studio => studio.startRunning(compiledApp))
-      }}>
+      return <Button onClick={this.onRun}>
         <Icon className={styles.playIcon} name='play' /> Run Application
       </Button>
     }
   },
+  renderShareButton () {
+    const { store } = this.props
+    if (store.query(studio => studio.isPublishing())) {
+      return <Button disabled>Saving...</Button>
+    } else {
+      return <Button onClick={this.onShare}>
+        <Icon name='share' /> Save and Share
+      </Button>
+    }
+  },
+  onRun () {
+    runApp(this.props.store)
+  },
+  onShare () {
+    share(this.props.store)
+  },
   render () {
     return <div className={styles.root}>
       {this.renderCompileButton()}
+      <div className={styles.spacer}></div>
+      {this.renderShareButton()}
     </div>
   }
 })

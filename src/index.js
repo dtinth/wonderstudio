@@ -1,3 +1,6 @@
+// Polyfillify!
+import 'babel-polyfill'
+
 // Import React to use react-router
 import React from 'react'
 import { render } from 'react-dom'
@@ -28,11 +31,11 @@ import './index.styl'
 require.include('./app/Components')
 
 import reproxy from './reproxy'
-import StudioAppProxy from 'react-proxy-loader?name=StudioApp!./studio/StudioApp'
+import StudioPageProxy from 'react-proxy-loader?name=StudioPage!./studio/StudioPage'
 import AppPageProxy from 'react-proxy-loader?name=AppPage!./app/AppPage'
 import AppLoading from './loading/AppLoading'
 
-const StudioApp = reproxy(StudioAppProxy, AppLoading)
+const StudioPage = reproxy(StudioPageProxy, AppLoading)
 const AppPage = reproxy(AppPageProxy, AppLoading)
 
 const NotFound = () => <div style={{ textAlign: 'center', padding: 24, color: colors.red500 }}>
@@ -40,9 +43,9 @@ const NotFound = () => <div style={{ textAlign: 'center', padding: 24, color: co
 </div>
 
 const router = <Router history={browserHistory}>
-  <Route path='/' component={StudioApp} />
-  <Route path='/studio/:appId' component={StudioApp} />
-  <Route path='/run/:appId' component={AppPage} />
+  <Route path='/' component={StudioPage} />
+  <Route path='/app/:viewKey/studio/:editKey' component={StudioPage} />
+  <Route path='/app/:viewKey' component={AppPage} />
   <Route path='/test/loading' component={AppLoading} />
   <Route path='/*' component={NotFound} />
 </Router>
