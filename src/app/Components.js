@@ -88,51 +88,6 @@ AppBar.metadata = {
 
 // =============================================================================
 
-export function TextField (props) {
-  return <MaterialTextField
-    style={{ width: '100%' }}
-    hintText={props.hintText}
-    hintStyle={{ paddingLeft: INPUT_PADDING }}
-    floatingLabelText={props.floatingLabelText}
-    floatingLabelStyle={{ paddingLeft: INPUT_PADDING }}
-    inputStyle={{ paddingLeft: INPUT_PADDING }}
-    value={props.value}
-    onChange={e => {
-      const value = e.target.value
-      props.onPropChange('value', value)
-      if (props.onchange) props.onchange(e)
-    }}
-    {...props.multiline ? { multiLine: true, rows: 3, rowsMax: 5 } : { }}
-  />
-}
-TextField.metadata = {
-  properties: propertySet({
-    hintText: prop => (prop
-      .string()
-      .doc('The placeholder text that will be displayed when this field is empty')
-      .input('text')
-    ),
-    floatingLabelText: prop => (prop
-      .string()
-      .defaultsToName()
-      .doc('The text to display above the field’s value')
-      .input('text')
-    ),
-    value: prop => (prop
-      .string()
-      .doc('The text inside this text field')
-      .input('textarea')
-    ),
-    multiline: prop => (prop
-      .boolean()
-      .doc('If true, will allow user to enter multiple lines of text')
-      .input('checkbox')
-    )
-  })
-}
-
-// =============================================================================
-
 export function Button (props) {
   return <div style={{ margin: '8px 16px' }}>
     <RaisedButton
@@ -218,6 +173,51 @@ SectionHeader.metadata = {
       .defaultsToName()
       .doc('The section title text')
       .input('text')
+    )
+  })
+}
+
+// =============================================================================
+
+export function TextField (props) {
+  return <MaterialTextField
+    style={{ width: '100%' }}
+    hintText={props.hintText}
+    hintStyle={{ paddingLeft: INPUT_PADDING }}
+    floatingLabelText={props.floatingLabelText}
+    floatingLabelStyle={{ paddingLeft: INPUT_PADDING }}
+    inputStyle={{ paddingLeft: INPUT_PADDING }}
+    value={props.value}
+    onChange={e => {
+      const value = e.target.value
+      props.onPropChange('value', value)
+      if (props.onchange) props.onchange(e)
+    }}
+    {...props.multiline ? { multiLine: true, rows: 3, rowsMax: 5 } : { }}
+  />
+}
+TextField.metadata = {
+  properties: propertySet({
+    hintText: prop => (prop
+      .string()
+      .doc('The placeholder text that will be displayed when this field is empty')
+      .input('text')
+    ),
+    floatingLabelText: prop => (prop
+      .string()
+      .defaultsToName()
+      .doc('The text to display above the field’s value')
+      .input('text')
+    ),
+    value: prop => (prop
+      .string()
+      .doc('The text inside this text field')
+      .input('textarea')
+    ),
+    multiline: prop => (prop
+      .boolean()
+      .doc('If true, will allow user to enter multiple lines of text')
+      .input('checkbox')
     )
   })
 }
