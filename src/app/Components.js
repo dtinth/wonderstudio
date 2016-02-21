@@ -4,6 +4,7 @@ import styles from './styles.styl'
 import RaisedButton from 'material-ui/lib/raised-button'
 import MaterialTextField from 'material-ui/lib/text-field'
 import MaterialAppBar from 'material-ui/lib/app-bar'
+import MaterialCheckbox from 'material-ui/lib/checkbox'
 import u from 'updeep'
 import { mapValues } from 'lodash'
 
@@ -37,6 +38,10 @@ const createPropertyDescriptionBuilder = name => {
         .type('bool')
         .coerce(Boolean)
         .default(false)
+      ),
+      callback: when => (builder
+        .type('fn()')
+        .doc('The function that will be invoked ' + when)
       ),
       defaultsToName: () => (builder
         .default(({ name }) => String(name || ''))
@@ -126,8 +131,40 @@ Button.metadata = {
       .input('checkbox')
     ),
     onclick: prop => (prop
-      .type('fn()')
-      .doc('The function that will be invoked when the button is clicked')
+      .callback('when the button is clicked')
+    )
+  })
+}
+
+// =============================================================================
+
+export function Checkbox (props) {
+  return <div style={{ margin: '8px 16px' }}>
+    <MaterialCheckbox
+      label={props.label}
+      checked={props.checked}
+      onCheck={e => {
+        props.onPropChange('checked', !props.checked)
+        if (props.onchange) props.onchange(e)
+      }}
+    />
+  </div>
+}
+Checkbox.metadata = {
+  properties: propertySet({
+    label: prop => (prop
+      .string()
+      .defaultsToName()
+      .doc('The text to display on the checkbox')
+      .input('text')
+    ),
+    checked: prop => (prop
+      .boolean()
+      .doc('True if this checkbox is checked')
+      .input('checkbox')
+    ),
+    onchange: prop => (prop
+      .callback('after the checkbox has been toggled')
     )
   })
 }
@@ -218,6 +255,9 @@ TextField.metadata = {
       .boolean()
       .doc('If true, will allow user to enter multiple lines of text')
       .input('checkbox')
+    ),
+    onchange: prop => (prop
+      .callback('when the text is entered')
     )
   })
 }

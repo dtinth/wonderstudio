@@ -23,7 +23,7 @@ ui:
       name: label3
       _id: 'c4'
       props:
-        text: Add controls to the application. Click on a control to edit its properties. Drag ’em around to rearrange. And breath life into your app with JavaScript code!
+        text: Add controls to the application. Click on a control to edit its properties. Drag ’em around to rearrange. Right click to remove. And breath life into your app with JavaScript code!
   - components:
     - type: SectionHeader
       name: header1
@@ -38,14 +38,14 @@ ui:
         text: Here’s an example application that adds two number together.
   - components:
     - type: TextField
-      name: textBox1
+      name: textField1
       _id: 'c7'
       props:
         floatingLabelText: 'A'
         hintText: 'Enter some number'
   - components:
     - type: TextField
-      name: textBox2
+      name: textField2
       _id: 'c8'
       props:
         floatingLabelText: 'B'
@@ -67,8 +67,8 @@ code: |
   // Enter your code here to make your application alive!
 
   function onButtonClick () {
-    const a = Number(ui.textBox1.value)
-    const b = Number(ui.textBox2.value)
+    const a = Number(ui.textField1.value)
+    const b = Number(ui.textField2.value)
     const result = a + b
     const message = a + ' + ' + b + ' = ' + result
     ui.resultLabel.text = message
